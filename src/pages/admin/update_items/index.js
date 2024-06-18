@@ -3,7 +3,7 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button, Select } from '@chakra-ui/react'
 import { startTransition, useState } from "react";
 import { toast } from "react-toastify";
-import shopApi from "../../../API/shopApi";
+import shopApi from "../../../API/itemApi";
 import { updateItemsSelector } from "../../../redux/selectors";
 import { useSelector } from "react-redux";
 export default function CreateItems() {

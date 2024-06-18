@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { AiFillLike, AiOutlineRight } from "react-icons/ai";
 import "./item.css";
 import { useEffect, useState } from "react";
-import shopApi from "../../API/shopApi";
+import shopApi from "../../API/itemApi";
 import { BsFacebook, BsInstagram, BsMessenger, BsTwitter } from "react-icons/bs";
 import { tokenRemainingSelector } from "../../redux/selectors";
 import { useSelector } from "react-redux";

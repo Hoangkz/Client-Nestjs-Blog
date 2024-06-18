@@ -21,7 +21,7 @@ import "./header.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import searchSlice from "../../../components/search";
-import shopApi from "../../../API/shopApi";
+import shopApi from "../../../API/itemApi";
 import authSlice from '../../../components/auth';
 import { tokenRemainingSelector } from "../../../redux/selectors";
 import { toast } from "react-toastify";
@@ -46,7 +46,7 @@ export default function Header(props) {
   const handleClickLink = (e) => {
     setCheckDataItem(false)
   };
-  
+
   useEffect(() => {
     function handleClick(event) {
       const x = event.clientX;
@@ -69,11 +69,11 @@ export default function Header(props) {
       document.removeEventListener("click", handleClick);
     };
   }, []);
-  
+
   useEffect(() => {
     (async () => {
       try {
-        if(search.trim()) {
+        if (search.trim()) {
           const res = await shopApi.searchClient(search.trim());
           setDataItem(res.data.items);
           setCheckDataItem(true)
@@ -89,16 +89,16 @@ export default function Header(props) {
   const navigate = useNavigate();
   const handleClickLogOut = (e) => {
     authApi.logout()
-    .then((response)=>{
-          toast.success(response.data.message);
-          dispatch(authSlice.actions.logout());
-          localStorage.setItem("token", "null");
-          localStorage.setItem("refresh_token", "null");
-          localStorage.setItem("user", "null"); 
-    })
-    .catch((error) => {
-      toast.error(error.response.data.message);
-    })
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(authSlice.actions.logout());
+        localStorage.setItem("token", "null");
+        localStorage.setItem("refresh_token", "null");
+        localStorage.setItem("user", "null");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      })
   };
   const location = useLocation();
   const handleClickButton = (e) => {
@@ -107,7 +107,7 @@ export default function Header(props) {
       navigate("/search");
     }
   };
-  const locationHref = location.pathname==="/"?null:`?next-page=${location.pathname}`
+  const locationHref = location.pathname === "/" ? null : `?next-page=${location.pathname}`
 
   const role = userName?.role;
   return (
@@ -160,7 +160,7 @@ export default function Header(props) {
                   Hỗ trợ
                 </Link>
               </ListItem>
-              {!isLogined&&!userName ? (
+              {!isLogined && !userName ? (
                 <>
                   <ListItem className="navItem" margin="8px">
                     <a
@@ -171,12 +171,12 @@ export default function Header(props) {
                     </a>
                   </ListItem>
                   <ListItem className="navItem" margin="8px">
-                  <a
-                    href={`/auth/login${locationHref?locationHref:""}`}
-                    style={{ textDecoration: "none", color: "#fff" }}
-                  >
-                    Đăng nhập
-                  </a>
+                    <a
+                      href={`/auth/login${locationHref ? locationHref : ""}`}
+                      style={{ textDecoration: "none", color: "#fff" }}
+                    >
+                      Đăng nhập
+                    </a>
                   </ListItem>
                 </>
               ) : (
@@ -342,7 +342,7 @@ export default function Header(props) {
                   backgroundColor={"#fff"}
                   tabIndex="2"
                 />
-                {search.length > 0&&checkdataItem ? (
+                {search.length > 0 && checkdataItem ? (
                   <Box
                     ref={myElementRef}
                     onClick={handleClickFormSearch}
@@ -360,39 +360,39 @@ export default function Header(props) {
                       <ListItem>
                         {dataItem
                           ? dataItem?.map((data, index) => {
-                              return (
-                                <Link
-                                  key={index}
-                                  onClick={handleClickLink}
-                                  tabIndex="100"
-                                  to={`/items/${data?.name}`}
+                            return (
+                              <Link
+                                key={index}
+                                onClick={handleClickLink}
+                                tabIndex="100"
+                                to={`/items/${data?.name}`}
+                              >
+                                <Box
+                                  _hover={{
+                                    backgroundColor: "#fafaf8",
+                                    color: "black",
+                                    border: "1px solid #b3b2b2",
+                                  }}
+                                  style={{
+                                    display: "flex",
+                                    padding: "12px 15px",
+                                  }}
                                 >
+                                  <Image
+                                    src={data?.img}
+                                    alt={data?.name}
+                                    style={{ width: "60px" }}
+                                  />
                                   <Box
-                                    _hover={{
-                                      backgroundColor: "#fafaf8",
-                                      color: "black",
-                                      border: "1px solid #b3b2b2",
-                                    }}
-                                    style={{
-                                      display: "flex",
-                                      padding: "12px 15px",
-                                    }}
+                                    _hover={{ color: "black" }}
+                                    m={"auto 16px"}
                                   >
-                                    <Image
-                                      src={data?.img}
-                                      alt={data?.name}
-                                      style={{ width: "60px" }}
-                                    />
-                                    <Box
-                                      _hover={{ color: "black" }}
-                                      m={"auto 16px"}
-                                    >
-                                      {data?.name}
-                                    </Box>
+                                    {data?.name}
                                   </Box>
-                                </Link>
-                              );
-                            })
+                                </Box>
+                              </Link>
+                            );
+                          })
                           : null}
                       </ListItem>
                     </List>

@@ -21,7 +21,7 @@ import "./header.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import searchSlice from "../../components/search";
-import shopApi from "../../API/shopApi";
+import shopApi from "../../API/itemApi";
 import authSlice from '../../components/auth';
 import { tokenRemainingSelector } from "../../../redux/selectors";
 import { toast } from "react-toastify";

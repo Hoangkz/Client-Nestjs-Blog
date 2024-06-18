@@ -26,7 +26,7 @@ import {
     TableContainer,
 } from '@chakra-ui/react'
 import { toast } from "react-toastify";
-import shopApi from "../../../API/shopApi";
+import shopApi from "../../../API/itemApi";
 
 import update_items from "../../../components/update_items"
 

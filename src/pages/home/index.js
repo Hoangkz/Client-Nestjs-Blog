@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import "./home.css"
-import shopApi from "../../API/shopApi";
+import shopApi from "../../API/itemApi";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 export default function Home() {
