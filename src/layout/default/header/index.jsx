@@ -134,12 +134,12 @@ export default function Header(props) {
               <ListItem margin="8px" color="#fff" cursor={"inherit"}>
                 Kết nối
               </ListItem>
-              <ListItem className="navItem" color="#fff" fontSize="20px">
+              <ListItem mt="5px" className="navItem" color="#fff" fontSize="20px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                   <Icon as={FaFacebook} />
                 </Link>
               </ListItem>
-              <ListItem className="navItem" color="#fff" fontSize="20px">
+              <ListItem mt="5px" className="navItem" color="#fff" fontSize="20px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                   <Icon as={FaGoogle} />
                 </Link>
@@ -324,15 +324,9 @@ export default function Header(props) {
           </Flex>
         </Box>
         <Box w="80%" margin="auto" mt={4} pb={0}>
-          <Flex justify={"space-between"}>
-            <Box fontSize="2.5rem" color="#fff" position="relative">
-              <Link to={"/"} style={{ color: "#fff" }} className="navItem">
-                <Icon as={BsFillBagCheckFill} mt="-15px" bg="" color="#fff" />
-                Dalziel
-              </Link>
-            </Box>
-            <Box w="75%">
-              <Flex>
+          <Flex justify={"center"}>
+            <Box w="80%">
+              <Flex justify={"center"}>
                 <Input
                   onChange={handleChangeInput}
                   // ref={inputRef}
@@ -410,11 +404,6 @@ export default function Header(props) {
                 </Button>
               </Flex>
             </Box>
-            <Link to={"/carts"}>
-              <Box fontSize="2.5rem" color="#fff" className="navItem">
-                <Icon as={AiOutlineShoppingCart} />
-              </Box>
-            </Link>
           </Flex>
         </Box>
         <Box h={4}></Box>
