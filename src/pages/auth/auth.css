@@ -1,0 +1,36 @@
+
+.modal{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    animation: fadeIn linear 0.1s;
+}
+.modal__overlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.1);
+    z-index: -1;
+
+}
+*{
+    box-sizing: inherit;
+}
+.linkSupport{
+    margin: 0 2px;
+}
+.linkSupport:hover{
+    text-decoration: revert; 
+}
+.boderIcon::after{
+    position: absolute;
+    content: "";
+    border: 1px solid #dbdbdb;
+    top: 4px;
+    width: 1px;
+    z-index: 10;
+    height: 17px;
+}

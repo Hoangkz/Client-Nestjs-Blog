@@ -1,0 +1,16 @@
+.buttonNavbar:hover{
+    cursor: pointer;
+    background-color: #f7364a;
+}
+
+.navItem:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+.navItem_hover:hover{
+    background-color: #ebebeb;
+}
+
+.navItem_hover>a>header{
+    padding: 9px 18px;
+}

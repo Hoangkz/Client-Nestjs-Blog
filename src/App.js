@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { ChakraProvider } from '@chakra-ui/react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { publicRoutes, privateRoutes } from './routes';
+import DefaultLayout from './layout/default';
+import { Fragment } from 'react';
+import PrivateRoute from './routes/PrivateRoute';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <Router>
+        <Routes>
+          {publicRoutes.map((route, index) => {
+            const Page = route.element;
+            let Layout = DefaultLayout
+            if (route.layout) {
+              Layout = route.layout
+            }
+            else if (route.layout === null) {
+              Layout = Fragment
+            }
+            return <Route key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  <Page />
+                </Layout>
+              } />
+          })}
+          <Route element={<PrivateRoute />}>
+            {privateRoutes.map((route, index) => {
+              const Page = route.element;
+              let Layout = DefaultLayout
+              if (route.layout) {
+                Layout = route.layout
+              }
+              else if (route.layout === null) {
+                Layout = Fragment
+              }
+              return <Route key={index}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                } />
+            })}
+          </Route>
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 }
-
-export default App;

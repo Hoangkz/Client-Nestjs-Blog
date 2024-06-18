@@ -1,0 +1,11 @@
+.homeItem:hover{
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.danhmuchover:hover .item_gia{
+  color: #fe6433;
+}
+.colorBlue{
+  color: blue !important;
+}
