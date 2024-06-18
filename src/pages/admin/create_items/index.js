@@ -33,7 +33,7 @@ export default function CreateItems() {
             setCheckSoLuong(false)
         }
 
-        if (nameSP && descSP && loaiSP && linkIMG && donGia && soLuong) {
+        if (nameSP && descSP && linkIMG && donGia && soLuong) {
             const formData = new FormData();
             formData.append('id', dataUser._id)
             formData.append('name', nameSP)
@@ -75,13 +75,13 @@ export default function CreateItems() {
                         </Box>
                         <Box mt={"10px"}>
                             <label htmlFor="loaisp" fontSize={"16px"} >Loại sản phẩm</label>
-                            <Select id="loaisp" backgroundColor='#fff' onChange={(e) => setLoaiSP(e.target.value)} mt={"10px"}>
+                            {/* <Select id="loaisp" backgroundColor='#fff' onChange={(e) => setLoaiSP(e.target.value)} mt={"10px"}>
                                 {danhmuc && danhmuc.map((data, index) => {
                                     return (
                                         <option value={data?.desc} key={index}>{data?.desc}</option>
                                     )
                                 })}
-                            </Select>
+                            </Select> */}
                         </Box>
                         <Box mt={"10px"}>
                             <label htmlFor="img" fontSize={"16px"} >Link ảnh</label>
