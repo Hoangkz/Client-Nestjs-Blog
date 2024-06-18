@@ -52,7 +52,7 @@ export default function ListUser() {
     function handlePageClick(selectedPage) {
         setCurrentPage(selectedPage.selected + 1);
     }
-    
+
     useEffect(() => {
         (async () => {
             setCheckDelete(false)
@@ -60,8 +60,8 @@ export default function ListUser() {
                 const formData = new FormData();
                 formData.append('id', user?._id);
                 formData.append('search', search);
-        
-                if(checkSearch){
+
+                if (checkSearch) {
                     setCheckSearch(!checkSearch)
                     setCurrentPage(1)
                 }
