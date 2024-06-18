@@ -5,8 +5,6 @@ import "./item.css";
 import { useEffect, useState } from "react";
 import shopApi from "../../API/shopApi";
 import { BsFacebook, BsInstagram, BsMessenger, BsTwitter } from "react-icons/bs";
-import ModalAddItems from "./modal_add_items"
-import ModalBuyItems from "./modal_buy_items"
 import { tokenRemainingSelector } from "../../redux/selectors";
 import { useSelector } from "react-redux";
 export default function ListItems() {
@@ -103,7 +101,7 @@ export default function ListItems() {
                                             </Flex>
                                             <Flex>
                                                 <Box m="8px 32px 16px 0">Vân chuyển</Box>
-                                                <Box mt={2} fontSize="1.2rem" lineHeight={1.1}>{userName?.address?(userName?.address?.charAt(0).toUpperCase()+userName?.address.slice(1)):"??"}</Box>
+                                                <Box mt={2} fontSize="1.2rem" lineHeight={1.1}>{userName?.address ? (userName?.address?.charAt(0).toUpperCase() + userName?.address.slice(1)) : "??"}</Box>
                                             </Flex>
                                             <Flex>
                                                 <Box m="8px 32px 16px 0">Số lượng</Box>
@@ -122,11 +120,7 @@ export default function ListItems() {
                                                 <Box m="8px 32px 16px 0">Phí ship</Box>
                                                 <Box color="#28a745" fontSize="1.75rem" fontWeight={600} lineHeight={1.2}>Miễn phí</Box>
                                             </Flex>
-                                            <Flex my={4}>
-                                                <ModalAddItems user ={userName} item = {dataItem?.item} count ={countItem} />
-                                                <Box m={"0 8px"}></Box>
-                                                <ModalBuyItems user ={userName} item = {dataItem?.item} count ={countItem}/>
-                                            </Flex>
+
                                         </Box>
                                     </Box>
                                 </Flex>
