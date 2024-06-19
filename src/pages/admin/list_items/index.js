@@ -65,10 +65,12 @@ export default function ListUser() {
                     setCurrentPage(1)
                 }
                 const res = await itemApi.GetListItems(currentPage);
-                const listCheckBox = res?.data?.data.map(item => {
+                console.log(res?.data?.items)
+                const listCheckBox = res?.data?.items.map(item => {
+                    const { category, ...rest } = item
                     return {
                         ...item,
-                        isChecked: false
+                        isChecked: false,
                     }
                 })
                 setIsCheckedAll(false)
@@ -207,15 +209,15 @@ export default function ListUser() {
                                             </Th>
                                             <Th p={"8px 12px"} >No.</Th>
                                             <Th p={"8px 12px"}>Name item</Th>
-                                            <Th>Quatity</Th>
                                             <Th>Description</Th>
+                                            <Th>Quatity</Th>
+                                            <Th>Category</Th>
                                             <Th>Create At</Th>
                                             <Th>Update At</Th>
                                             <Th p={0} ></Th>
                                         </Tr>
                                     </Thead>
                                     {checkboxList.map((item, index) => {
-                                        console.log(item)
                                         const date = item?.createdAt || null
                                         const date1 = item?.updatedAt || null
                                         return (
@@ -231,6 +233,7 @@ export default function ListUser() {
                                                     <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link >{item.name}</Link></Td>
                                                     <Td>{item.quatity}</Td>
                                                     <Td>{item.description}</Td>
+                                                    <Td>{item.category}</Td>
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>
                                                     <Td>{date && format(new Date(date1), 'dd/MM/yyyy')}</Td>
                                                     <Td p={"0"}>

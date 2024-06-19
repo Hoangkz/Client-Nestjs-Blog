@@ -1,33 +1,36 @@
 import { Input } from "@chakra-ui/input";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button, Select } from '@chakra-ui/react'
-import { startTransition, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import shopApi from "../../../API/itemApi";
 import { updateItemsSelector } from "../../../redux/selectors";
 import { useSelector } from "react-redux";
-export default function CreateItems() {
-
+import itemApi from "../../../API/itemApi";
+export default function UpdateItems() {
 
     const dataItems = useSelector(updateItemsSelector);
+    console.log(dataItems)
     const [nameSP, setNameSP] = useState(dataItems?.name);
     const [descSP, setDescSP] = useState(dataItems?.description);
-    const [loaiSP, setLoaiSP] = useState(dataItems?.loai);
     const [linkIMG, setLinkIMG] = useState(dataItems?.img);
-    const [donGia, setDonGia] = useState(dataItems?.gia);
     const [soLuong, setSoLuong] = useState(dataItems?.soluong);
 
-    const [checkDonGia, setCheckDonGia] = useState(false);
     const [checkSoLuong, setCheckSoLuong] = useState(false);
+
+    const [listCategory, setListCategory] = useState(dataItems?.listCategory);
+    const [category, setCategory] = useState(dataItems?.category?.id);
+
+    useEffect(() => {
+        (async () => {
+            const res = await itemApi.GetAllCategory();
+            setListCategory(res.data);
+        })();
+    }, [])
+
     const handleSubmitForm = (e) => {
         e.preventDefault();
-        if (!donGia) {
-            setCheckDonGia(true)
-        }
-        else {
-            setCheckDonGia(false)
 
-        }
         if (!soLuong) {
             setCheckSoLuong(true)
         }
@@ -35,14 +38,13 @@ export default function CreateItems() {
             setCheckSoLuong(false)
         }
 
-        if (nameSP && descSP && loaiSP && linkIMG && donGia && soLuong) {
+        if (nameSP && descSP && category && linkIMG && soLuong) {
             const formData = new FormData();
-            formData.append('id', dataItems._id)
+            formData.append('id', dataItems.id)
             formData.append('name', nameSP)
             formData.append('description', descSP)
-            formData.append('loai', loaiSP)
-            formData.append('img', linkIMG)
-            formData.append('gia', donGia)
+            formData.append('category', category)
+            formData.append('imageitem', linkIMG)
             formData.append('soluong', soLuong)
             shopApi.update_Items(formData)
                 .then((response) => {
@@ -69,38 +71,35 @@ export default function CreateItems() {
                     <Box w="80%" maxW="800px" mx={"auto"}>
                         <Text fontSize={"28px"} fontWeight={600} color={"#fe6433"} >{nameSP}</Text>
                         <Box mt={"10px"}>
-                            <label htmlFor="name" fontSize={"16px"} >Tên sản phẩm</label>
+                            <label htmlFor="name" fontSize={"16px"} >Name item</label>
                             <Input id="name" defaultValue={nameSP} onChange={(e) => setNameSP(e.target.value)} backgroundColor='#fff' mt={"10px"} />
                         </Box>
                         <Box mt={"10px"}>
-                            <label htmlFor="desc" fontSize={"16px"} >Mô tả</label>
+                            <label htmlFor="desc" fontSize={"16px"} >Description</label>
                             <Input id="desc" defaultValue={descSP} backgroundColor='#fff' onChange={(e) => setDescSP(e.target.value)} mt={"10px"} />
                         </Box>
                         <Box mt={"10px"}>
-                            <label htmlFor="loaisp" fontSize={"16px"} >Loại sản phẩm</label>
-                            {/* <Select id="loaisp" defaultValue={loaiSP} backgroundColor='#fff' onChange={(e) => setLoaiSP(e.target.value)} mt={"10px"}>
-                                {danhmuc && danhmuc.map((data, index) => {
+                            <label htmlFor="loaisp" fontSize={"16px"} >Category</label>
+                            <Select id="loaisp" defaultValue={category} backgroundColor='#fff' onChange={(e) => setCategory(e.target.value)} mt={"10px"}>
+                                {listCategory && listCategory.map((data, index) => {
                                     return (
-                                        <option value={data?.desc} key={index}>{data?.desc}</option>
+                                        <option value={data?.id} key={index}>{data?.name}</option>
                                     )
                                 })}
-                            </Select> */}
+                            </Select>
                         </Box>
                         <Box mt={"10px"}>
                             <label htmlFor="img" fontSize={"16px"} >Link ảnh</label>
                             <Input id="img" defaultValue={linkIMG} backgroundColor='#fff' onChange={(e) => setLinkIMG(e.target.value)} mt={"10px"} />
                         </Box>
+
                         <Box mt={"10px"}>
-                            <label htmlFor="gia" fontSize={"16px"} >Đơn giá</label>
-                            <Input defaultValue={donGia} isInvalid={checkDonGia} id="gia" backgroundColor='#fff' onChange={(e) => setDonGia(parseInt(e.target.value))} mt={"10px"} />
-                        </Box>
-                        <Box mt={"10px"}>
-                            <label htmlFor="soluong" fontSize={"16px"} >Số lượng</label>
+                            <label htmlFor="soluong" fontSize={"16px"} >Quatity</label>
                             <Input defaultValue={soLuong} isInvalid={checkSoLuong} id="soluong" backgroundColor='#fff' onChange={(e) => setSoLuong(parseInt(e.target.value))} mt={"10px"} />
                         </Box>
                         <Flex>
                             <Button type="submit" colorScheme='teal' mt={"10px"}>Update</Button>
-                            <Button mt={"10px"} ml="8px" onClick={handleClickGoBack}>Trở lại</Button>
+                            <Button mt={"10px"} ml="8px" onClick={handleClickGoBack}>Back</Button>
                         </Flex>
                     </Box>
                 </form>

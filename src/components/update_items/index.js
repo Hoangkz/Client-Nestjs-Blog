@@ -4,12 +4,12 @@ export default createSlice({
     // name
     name: 'update_items',
     // biến khởi tạo
-    initialState:{
-        items:null
+    initialState: {
+        items: null
     },
     // các action thực hiện
-    reducers:{
-        update:(state, action)=>{
+    reducers: {
+        update: (state, action) => {
             state.items = action.payload
         }
     }
