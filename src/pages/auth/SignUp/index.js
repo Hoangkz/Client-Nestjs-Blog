@@ -7,6 +7,7 @@ import authApi from "../../../API/authApi";
 import { toast } from "react-toastify";
 import Google from "../Login/Google"
 import Facebook from "../Login/FaceBook"
+import { TiHomeOutline } from "react-icons/ti";
 export default function SignUp() {
     const handleClickGoBack = () => {
         startTransition(() => {
@@ -72,13 +73,13 @@ export default function SignUp() {
             formData.append('username', formUserName);
             formData.append('password', formPassword);
             authApi.signup(formData)
-            .then(response => {
-                toast.success(response.data.message);
-                navigate('/auth/login');
-            })
-            .catch(error => {
-                toast.error(error.response.data.message);
-            })
+                .then(response => {
+                    toast.success(response.data.message);
+                    navigate('/auth/login');
+                })
+                .catch(error => {
+                    toast.error(error.response.data.message);
+                })
         }
     };
 
@@ -98,9 +99,9 @@ export default function SignUp() {
                                 <Box>
                                     <Link to={"/"}>
                                         <Box textAlign={"center"}>
-                                            <Icon fontSize="50px" color={"#fe6433"} as={AiOutlineShoppingCart} />
+                                            <Icon fontSize="40px" color={"#fe6433"} as={TiHomeOutline} />
                                             <Box color={"#fe6433"} fontSize="24px" fontWeight="700" mt={"-4px"}>
-                                                Dalziel
+                                                Home
                                             </Box>
                                         </Box>
                                     </Link>
@@ -161,8 +162,8 @@ export default function SignUp() {
                             <Box w="500px" backgroundColor={"#f5f5f5"} borderRadius={6}>
                                 <Box h={2}></Box>
                                 <Flex justify={"space-around"} boxSizing="revert" p={"4px 12px"}>
-                                    <Facebook/>
-                                    <Google/>
+                                    <Facebook />
+                                    <Google />
                                 </Flex>
                                 <Box h={2}></Box>
                             </Box>

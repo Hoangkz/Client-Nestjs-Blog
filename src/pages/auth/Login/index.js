@@ -12,6 +12,7 @@ import authSlice from '../../../components/auth';
 import Google from "./Google"
 import Facebook from "./FaceBook"
 import ForgotPassword from "./ForgotPassword"
+import axios from "axios";
 export default function SignUp() {
 
     const dispatch = useDispatch();
@@ -23,12 +24,12 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
-    const [formUserName, setFormUserName] = useState("");
+    const [formEmail, setFormEmail] = useState("");
     const [formPassword, setFormPassword] = useState("");
 
-    const handleChangeFormUserName = (e) => {
+    const handleChangeFormEmail = (e) => {
         const value = e.target.value;
-        setFormUserName(value);
+        setFormEmail(value);
     }
 
     const handleChangeFormPassword = (e) => {
@@ -38,15 +39,17 @@ export default function SignUp() {
     const handSubmitForm = (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append('username', formUserName);
-        formData.append('password', formPassword);
-
+        const formData = {
+            email: formEmail,
+            password: formPassword
+        }
         authApi.login(formData)
             .then(response => {
-                toast.success(response.data.message);
-                const token = response.data.token;
-                const refresh_token = response.data.refresh_token;
+                toast.success("Login successfully");
+                console.log("vao day")
+                console.log(response)
+                const token = response.data.accesstoken;
+                const refresh_token = response?.data?.refreshtoken;
                 localStorage.setItem("token", token);
                 localStorage.setItem("refresh_token", refresh_token);
                 const decoded = jwt_decode(token);
@@ -103,10 +106,10 @@ export default function SignUp() {
                                 </Box>
                                 <Box>
                                     <Box m={"12px 0"}>
-                                        <Input onChange={handleChangeFormUserName} placeholder="Email/Số điện thoại" border={"2px solid #ccc"} />
+                                        <Input onChange={handleChangeFormEmail} placeholder="Email" border={"2px solid #ccc"} />
                                     </Box>
                                     <Box m={"12px 0"}>
-                                        <Input onChange={handleChangeFormPassword} placeholder="Mật khẩu" type={"password"} border={"2px solid #ccc"} />
+                                        <Input onChange={handleChangeFormPassword} placeholder="Password" type={"password"} border={"2px solid #ccc"} />
                                     </Box>
                                 </Box>
                                 <Box position={"relative"} fontSize="16px" textAlign={"end"} color={"black"}>

@@ -1,42 +1,57 @@
 import axiosClient from "./axiosClient";
-const shopApi = {
-  // get Courses trending
-  searchClient(query) {
-    const url = `/items/searchClient?q=${query}`;
+const itemApi = {
+  //category
+  delete_Category(data) {
+    const url = `/category/${data}`;
+    return axiosClient.delete(url);
+  },
+  create_Category(data) {
+    const url = `/category`;
+    return axiosClient.post(url, data);
+  },
+  update_Category(data) {
+    const { id, ...rest } = data
+    const url = `/category/${id}`;
+    return axiosClient.put(url, rest);
+  },
+  GetAllCategory(page) {
+    const url = `/category?page=${page}`;
     return axiosClient.get(url);
   },
-  search(query,page) {
-    const url = `/items/search?q=${query}&page=${page}`;
+  GetCategoryById(id) {
+    const url = `/category/${id}`;
     return axiosClient.get(url);
   },
-  home(page){
-    const url = `?page=${page}`;
+  //Item
+  search(query, page) {
+    const url = `/item/search?q=${query}&page=${page}`;
     return axiosClient.get(url);
   },
-  loaiItems(slug,page){
-    const url = `/items/${slug}/show?page=${page}`;
+  GetItemByCategoryId(id) {
+    const url = `/item/category/${id}`;
     return axiosClient.get(url);
   },
-  showItems(slug){
-    const url = `/items/${slug}`;
+  home(page) {
+    const url = `/item?page=${page}`;
     return axiosClient.get(url);
   },
-  list_Items(data,page) {
-    const url = `/items/list-items?page=${page}`;
-    return axiosClient.post(url,data);
+  get_items(id) {
+    const url = `/item/${id}`;
+    return axiosClient.get(url);
   },
   delete_Items(data) {
-    const url = `/items/delete-items`;
-    return axiosClient.post(url,data);
+    const url = `/item/${data}`;
+    return axiosClient.delete(url);
   },
   create_Items(data) {
-    const url = `/items/create-items`;
-    return axiosClient.post(url,data);
+    const url = `/item`;
+    return axiosClient.post(url, data);
   },
   update_Items(data) {
-    const url = `/items/update-items`;
-    return axiosClient.post(url,data);
-  },
+    const { id, ...rest } = data
+    const url = `/item/${id}`;
+    return axiosClient.put(url, rest);
+  }
 };
 
-export default shopApi;
+export default itemApi;
