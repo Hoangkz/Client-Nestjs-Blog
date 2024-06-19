@@ -14,14 +14,12 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { BsFillBagCheckFill } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import searchSlice from "../../../components/search";
-import shopApi from "../../../API/itemApi";
+import itemApi from "../../../API/itemApi";
 import authSlice from '../../../components/auth';
 import { tokenRemainingSelector } from "../../../redux/selectors";
 import { toast } from "react-toastify";
@@ -37,7 +35,7 @@ export default function Header(props) {
   const handleChangeInput = (e) => {
     setSearch(e.target.value);
   };
-  const userName = props.username
+  const userName = (props?.username?.firstname + " " + props?.username?.lastname).split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   const myElementRef = useRef(null);
   function handleClickFormSearch() {
     return myElementRef.current?.getBoundingClientRect() || 0;
@@ -74,7 +72,7 @@ export default function Header(props) {
     (async () => {
       try {
         if (search.trim()) {
-          const res = await shopApi.searchClient(search.trim());
+          const res = await itemApi.searchClient(search.trim());
           setDataItem(res.data.items);
           setCheckDataItem(true)
         } else {
@@ -109,7 +107,7 @@ export default function Header(props) {
   };
   const locationHref = location.pathname === "/" ? null : `?next-page=${location.pathname}`
 
-  const role = userName?.role;
+  const role = props?.username?.role;
   return (
     <>
       <Box
@@ -128,18 +126,18 @@ export default function Header(props) {
               </ListItem>
               <ListItem className="navItem" margin="8px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
-                  Tải ứng dụng
+                  Dowload
                 </Link>
               </ListItem>
               <ListItem margin="8px" color="#fff" cursor={"inherit"}>
-                Kết nối
+                Connect
               </ListItem>
-              <ListItem mt="5px" className="navItem" color="#fff" fontSize="20px">
+              <ListItem mt="1px" className="navItem" color="#fff" fontSize="20px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                   <Icon as={FaFacebook} />
                 </Link>
               </ListItem>
-              <ListItem mt="5px" className="navItem" color="#fff" fontSize="20px">
+              <ListItem mt="1px" className="navItem" color="#fff" fontSize="20px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                   <Icon as={FaGoogle} />
                 </Link>
@@ -148,7 +146,7 @@ export default function Header(props) {
             <List style={{ display: "flex" }} margin="0" padding={0}>
               <ListItem className="navItem" margin="8px">
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
-                  Thông báo
+                  Notification
                 </Link>
               </ListItem>
               <ListItem className="navItem" margin="8px">
@@ -157,17 +155,17 @@ export default function Header(props) {
                   target={"_blank"}
                   style={{ textDecoration: "none", color: "#fff" }}
                 >
-                  Hỗ trợ
+                  Help
                 </Link>
               </ListItem>
-              {!isLogined && !userName ? (
+              {!isLogined || !userName ? (
                 <>
                   <ListItem className="navItem" margin="8px">
                     <a
                       href="/auth/signup"
                       style={{ textDecoration: "none", color: "#fff" }}
                     >
-                      Đăng ký
+                      Login
                     </a>
                   </ListItem>
                   <ListItem className="navItem" margin="8px">
@@ -175,7 +173,7 @@ export default function Header(props) {
                       href={`/auth/login${locationHref ? locationHref : ""}`}
                       style={{ textDecoration: "none", color: "#fff" }}
                     >
-                      Đăng nhập
+                      Register
                     </a>
                   </ListItem>
                 </>
@@ -190,7 +188,7 @@ export default function Header(props) {
                           _hover={{ textDecoration: "none", opacity: "0.6" }}
                           color="#fff"
                         >
-                          {userName?.username?.charAt(0)?.toUpperCase() + userName?.username?.slice(1)}
+                          {userName}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent w={"220px"}>
@@ -205,71 +203,15 @@ export default function Header(props) {
                                 fontSize: "1rem",
                               }}
                             >
-                              <PopoverHeader>Tài khoản</PopoverHeader>
+                              <PopoverHeader>My Profile</PopoverHeader>
                             </Link>
                           </ListItem>
                           {role === 1 ? (
                             <>
-                              <ListItem className="navItem_hover">
-                                <Link
-                                  to="/carts"
-                                  style={{
-                                    display: "block",
-                                    color: "black",
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  <PopoverHeader p={"12px 16px"}>
-                                    Giỏ hàng của tôi
-                                  </PopoverHeader>
-                                </Link>
-                              </ListItem>
-                              <ListItem className="navItem_hover">
-                                <Link
-                                  to="/carts-order"
-                                  style={{
-                                    display: "block",
-                                    color: "black",
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  <PopoverHeader p={"12px 16px"}>
-                                    Đơn hàng của tôi
-                                  </PopoverHeader>
-                                </Link>
-                              </ListItem>
+
                             </>
-                          ) : role === 2 ? (
-                            <ListItem className="navItem_hover">
-                              <Link
-                                to="/admin/list-cart-order"
-                                style={{
-                                  display: "block",
-                                  color: "black",
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                <PopoverHeader p={"12px 16px"}>
-                                  Quản lý đơn hàng
-                                </PopoverHeader>
-                              </Link>
-                            </ListItem>
                           ) : role === 3 ? (
                             <>
-                              <ListItem className="navItem_hover">
-                                <Link
-                                  to="/admin/list-cart-order"
-                                  style={{
-                                    display: "block",
-                                    color: "black",
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  <PopoverHeader p={"12px 16px"}>
-                                    Quản lý đơn hàng
-                                  </PopoverHeader>
-                                </Link>
-                              </ListItem>
                               <ListItem className="navItem_hover">
                                 <Link
                                   to="/admin/list-user"
@@ -280,7 +222,7 @@ export default function Header(props) {
                                   }}
                                 >
                                   <PopoverHeader p={"12px 16px"}>
-                                    Danh sách Account
+                                    List User
                                   </PopoverHeader>
                                 </Link>
                               </ListItem>
@@ -294,7 +236,7 @@ export default function Header(props) {
                                   }}
                                 >
                                   <PopoverHeader p={"12px 16px"}>
-                                    Danh sách sản phẩm
+                                    List Items
                                   </PopoverHeader>
                                 </Link>
                               </ListItem>
@@ -310,7 +252,7 @@ export default function Header(props) {
                               onClick={handleClickLogOut}
                             >
                               <PopoverHeader p={"12px 16px"}>
-                                Đăng xuất
+                                Logout
                               </PopoverHeader>
                             </Box>
                           </ListItem>

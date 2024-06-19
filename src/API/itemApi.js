@@ -1,4 +1,4 @@
-import axiosClient from "./axiosClient";
+import axiosClient, { axiosHeader } from "./axiosClient";
 const itemApi = {
   //category
   delete_Category(data) {
@@ -15,7 +15,10 @@ const itemApi = {
     return axiosClient.put(url, rest);
   },
   GetAllCategory(page) {
-    const url = `/category?page=${page}`;
+    let url = `/category?page=${page}`;
+    if (typeof page !== 'number' || page < 1) {
+      url = "/category"
+    }
     return axiosClient.get(url);
   },
   GetCategoryById(id) {
@@ -31,7 +34,7 @@ const itemApi = {
     const url = `/item/category/${id}`;
     return axiosClient.get(url);
   },
-  home(page) {
+  GetListItems(page) {
     const url = `/item?page=${page}`;
     return axiosClient.get(url);
   },
@@ -45,7 +48,8 @@ const itemApi = {
   },
   create_Items(data) {
     const url = `/item`;
-    return axiosClient.post(url, data);
+    console.log(data)
+    return axiosHeader.post(url, data);
   },
   update_Items(data) {
     const { id, ...rest } = data

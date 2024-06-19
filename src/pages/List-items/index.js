@@ -3,13 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import "./List-items.css";
 import { useEffect, useState } from "react";
-import shopApi from "../../API/itemApi";
+import itemApi from "../../API/itemApi";
 import ReactPaginate from "react-paginate";
 export default function ListItems() {
     const { slug } = useParams();
     const slugUrl = slug
     const [dataItem, setDataItem] = useState()
-
+    console.log("Vao day")
     const [currentPage, setCurrentPage] = useState(1);
 
     function handlePageClick(selectedPage) {
@@ -18,7 +18,7 @@ export default function ListItems() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await shopApi.loaiItems(slugUrl, currentPage);
+                const res = await itemApi.GetListItems(slugUrl, currentPage);
                 setDataItem(res.data);
             } catch (error) {
                 console.log(error);

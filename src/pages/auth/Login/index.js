@@ -12,7 +12,6 @@ import authSlice from '../../../components/auth';
 import Google from "./Google"
 import Facebook from "./FaceBook"
 import ForgotPassword from "./ForgotPassword"
-import axios from "axios";
 export default function SignUp() {
 
     const dispatch = useDispatch();
@@ -46,14 +45,12 @@ export default function SignUp() {
         authApi.login(formData)
             .then(response => {
                 toast.success("Login successfully");
-                console.log("vao day")
-                console.log(response)
                 const token = response.data.accesstoken;
                 const refresh_token = response?.data?.refreshtoken;
                 localStorage.setItem("token", token);
                 localStorage.setItem("refresh_token", refresh_token);
                 const decoded = jwt_decode(token);
-                localStorage.setItem("user", JSON.stringify(decoded.data));
+                localStorage.setItem("user", JSON.stringify(decoded));
                 const urlParams = new URLSearchParams(window.location.search);
                 const nextPage = urlParams.get('next-page');
                 if (nextPage) {
@@ -62,8 +59,7 @@ export default function SignUp() {
                 else {
                     navigate('/');
                 }
-
-                dispatch(authSlice.actions.login({ checkLogin: true, user: decoded.data, token: token, refresh_token: refresh_token }));
+                dispatch(authSlice.actions.login({ checkLogin: true, user: decoded, token: token, refresh_token: refresh_token }));
             })
             .catch(error => {
                 toast.error(error.response.data.message);

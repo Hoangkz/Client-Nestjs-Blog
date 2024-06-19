@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import usersApi from "../../../API/usersApi";
-export default function ChangePassword({id}) {
+export default function ChangePassword({ id }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [password, setPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -26,8 +26,8 @@ export default function ChangePassword({id}) {
         const value = e.target.value;
         setPassword(value);
     }
-    const handleSubmitFormPassword = (e)=>{
-        
+    const handleSubmitFormPassword = (e) => {
+
         e.preventDefault(); // Ngăn chặn sự kiện submit mặc định của form
         // Xử lý logic đăng ký ở đây
         if (newPassword.length >= 5 && newPasswordComfirm === newPassword) {
@@ -36,13 +36,13 @@ export default function ChangePassword({id}) {
             formData.append('newPassword', newPassword);
             formData.append('id', id);
             usersApi.changePassword(formData)
-            .then(response => {
-                toast.success(response.data.message);
-                onClose();
-            })
-            .catch(error => {
-                toast.error(error.response.data.message);
-            })
+                .then(response => {
+                    toast.success(response.data.message);
+                    onClose();
+                })
+                .catch(error => {
+                    toast.error(error.response.data.message);
+                })
         }
     }
     const handleChangeNewPassword = (e) => {
@@ -76,32 +76,32 @@ export default function ChangePassword({id}) {
 
     return (
         <>
-            <Button onClick={onOpen} colorScheme='blue'>Đổi mật khẩu</Button>
+            <Button onClick={onOpen} colorScheme='blue'>Change Password</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Đổi mật khẩu</ModalHeader>
+                    <ModalHeader>Change Password</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <form onSubmit={handleSubmitFormPassword} >
                             <Box m={"24px 0"} position="relative">
-                                <Input type={"password"} onChange={handleChangePassWord} placeholder="Mật khẩu" border={"2px solid #ccc"} />
+                                <Input type={"password"} onChange={handleChangePassWord} placeholder="Password" border={"2px solid #ccc"} />
                             </Box>
                             <Box m={"24px 0"} position="relative">
-                                <Input onChange={handleChangeNewPassword} placeholder="Mật khẩu mới" type={"password"} border={"2px solid #ccc"} />
-                                {passwordError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Mật khẩu mới phải có ít nhất 5 ký tự!</span>}
+                                <Input onChange={handleChangeNewPassword} placeholder="New Password" type={"password"} border={"2px solid #ccc"} />
+                                {passwordError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>The new password must have at least 5 characters!</span>}
                             </Box>
                             <Box m={"24px 0"} position="relative">
-                                <Input onChange={handleChangeNewPasswordComfirm} placeholder="Nhập lại mật khẩu mới" type={"password"} border={"2px solid #ccc"} />
-                                {passwordComfirmError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Mật khẩu mới phải có ít nhất 5 ký tự!</span>}
-                                {(checkPasswordForm && !passwordComfirmError) && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Cần nhập lại mật khẩu mới!</span>}
+                                <Input onChange={handleChangeNewPasswordComfirm} placeholder="Confirm password" type={"password"} border={"2px solid #ccc"} />
+                                {passwordComfirmError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>The new password must have at least 5 characters!</span>}
+                                {(checkPasswordForm && !passwordComfirmError) && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Need to re-enter new password!</span>}
                             </Box>
                             {/* <ModalFooter> */}
                             <Flex justify={"end"} mb="16px">
-                                <Button type="submit" colorScheme='blue' mr={3}>Đổi mật khẩu</Button>
+                                <Button type="submit" colorScheme='blue' mr={3}>Change Password</Button>
                                 <Button onClick={onClose}>
-                                    Đóng
+                                    Close
                                 </Button>
                             </Flex>
                             {/* </ModalFooter> */}

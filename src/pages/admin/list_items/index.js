@@ -26,7 +26,7 @@ import {
     TableContainer,
 } from '@chakra-ui/react'
 import { toast } from "react-toastify";
-import shopApi from "../../../API/itemApi";
+import itemApi from "../../../API/itemApi";
 
 import update_items from "../../../components/update_items"
 
@@ -52,21 +52,20 @@ export default function ListUser() {
     function handlePageClick(selectedPage) {
         setCurrentPage(selectedPage.selected + 1);
     }
-
     useEffect(() => {
         (async () => {
             setCheckDelete(false)
             try {
-                const formData = new FormData();
-                formData.append('id', user?._id);
-                formData.append('search', search);
+                // const formData = new FormData();
+                // formData.append('id', user?.id);
+                // formData.append('search', search);
 
                 if (checkSearch) {
                     setCheckSearch(!checkSearch)
                     setCurrentPage(1)
                 }
-                const res = await shopApi.list_Items(formData, currentPage);
-                const listCheckBox = res.data.items.map(item => {
+                const res = await itemApi.GetListItems(currentPage);
+                const listCheckBox = res?.data?.data.map(item => {
                     return {
                         ...item,
                         isChecked: false
@@ -77,8 +76,8 @@ export default function ListUser() {
                 setDataItems(res.data);
 
             } catch (error) {
-                toast.error(error.response.data.message)
-                if (error.response.status === 403) {
+                toast.error(error?.response?.data?.message)
+                if (error?.response?.status === 403) {
                     navigate('/forbidden');
                     console.log(error)
                 }
@@ -137,7 +136,7 @@ export default function ListUser() {
         const formData = new FormData();
         formData.append("listId", list_id)
         formData.append("id", user?._id)
-        shopApi.delete_Items(formData)
+        itemApi.delete_Items(formData)
             .then((response) => {
                 onClose()
                 toast.success(response.data.message)
@@ -159,7 +158,7 @@ export default function ListUser() {
             <Box maxW="90%" mx={"auto"}>
                 <Box backgroundColor="#fff" position={"relative"}>
                     <Box color="rgb(149, 147, 147);">
-                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">DANH SÁCH VẬT PHẨM</Heading>
+                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">LIST ITEMS</Heading>
                     </Box>
                     <Flex style={{ position: "absolute", top: "16px", right: "10px" }}>
                         <Box>
@@ -206,16 +205,19 @@ export default function ListUser() {
                                                     onChange={handleCheckboxAllChange}>
                                                 </Checkbox>
                                             </Th>
-                                            <Th p={"8px 12px"} >STT</Th>
-                                            <Th p={"8px 12px"}>Tên sản phẩm</Th>
-                                            <Th>Số lượng</Th>
-                                            <Th>Đơn giá</Th>
-                                            <Th>Ngày tạo</Th>
+                                            <Th p={"8px 12px"} >No.</Th>
+                                            <Th p={"8px 12px"}>Name item</Th>
+                                            <Th>Quatity</Th>
+                                            <Th>Description</Th>
+                                            <Th>Create At</Th>
+                                            <Th>Update At</Th>
                                             <Th p={0} ></Th>
                                         </Tr>
                                     </Thead>
                                     {checkboxList.map((item, index) => {
-                                        const date = item?.updatedAt || null
+                                        console.log(item)
+                                        const date = item?.createdAt || null
+                                        const date1 = item?.updatedAt || null
                                         return (
                                             <Tbody key={index}>
                                                 <Tr>
@@ -227,9 +229,10 @@ export default function ListUser() {
                                                     </Td>
                                                     <Td p={"8px 16px"}>{index + 1}</Td>
                                                     <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link >{item.name}</Link></Td>
-                                                    <Td>{item.soluong}</Td>
-                                                    <Td>{item.gia}</Td>
+                                                    <Td>{item.quatity}</Td>
+                                                    <Td>{item.description}</Td>
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>
+                                                    <Td>{date && format(new Date(date1), 'dd/MM/yyyy')}</Td>
                                                     <Td p={"0"}>
                                                         <Button colorScheme='green' onClick={() => { handleClickUpdate(item) }} mr={"10px"}>Update</Button>
                                                     </Td>
@@ -244,7 +247,7 @@ export default function ListUser() {
                                     previousLabel={'<<'}
                                     nextLabel={'>>'}
                                     breakLabel={"..."}
-                                    pageCount={dataItems?.pageLength}
+                                    pageCount={dataItems?.pagination?.pageLength}
                                     marginPagesDisplayed={2}
                                     pageRangeDisplayed={3}
                                     onPageChange={handlePageClick}
