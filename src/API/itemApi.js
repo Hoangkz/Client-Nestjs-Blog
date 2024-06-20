@@ -2,23 +2,28 @@ import axiosClient, { axiosHeader } from "./axiosClient";
 const itemApi = {
   //category
   delete_Category(data) {
-    const url = `/category/${data}`;
-    return axiosClient.delete(url);
+    const url = `/category/many`;
+    return axiosClient.delete(url, {
+      data: { data },
+    });
   },
   create_Category(data) {
     const url = `/category`;
-    return axiosClient.post(url, data);
+    return axiosHeader.post(url, data);
   },
-  update_Category(data) {
-    const { id, ...rest } = data
+  update_Category(id, data) {
     const url = `/category/${id}`;
-    return axiosClient.put(url, rest);
+    return axiosHeader.put(url, data);
   },
   GetAllCategory(page) {
     let url = `/category?page=${page}`;
     if (typeof page !== 'number' || page < 1) {
       url = "/category"
     }
+    return axiosClient.get(url);
+  },
+  GetAllCategoryAdmin(page, search) {
+    let url = `/category/admin?page=${page}&search=${search}`;
     return axiosClient.get(url);
   },
   GetCategoryById(id) {
@@ -34,7 +39,11 @@ const itemApi = {
     const url = `/item/category/${id}`;
     return axiosClient.get(url);
   },
-  GetListItems(page) {
+  GetListItems(page, search) {
+    const url = `/item?page=${page}&search=${search}`;
+    return axiosClient.get(url);
+  },
+  GetListItemsHone(page) {
     const url = `/item?page=${page}`;
     return axiosClient.get(url);
   },
@@ -43,18 +52,18 @@ const itemApi = {
     return axiosClient.get(url);
   },
   delete_Items(data) {
-    const url = `/item/${data}`;
-    return axiosClient.delete(url);
+    const url = `/item/many`;
+    return axiosClient.delete(url, {
+      data: { data },
+    });
   },
   create_Items(data) {
     const url = `/item`;
-    console.log(data)
     return axiosHeader.post(url, data);
   },
-  update_Items(data) {
-    const { id, ...rest } = data
+  update_Items(id, data) {
     const url = `/item/${id}`;
-    return axiosClient.put(url, rest);
+    return axiosHeader.put(url, data);
   }
 };
 

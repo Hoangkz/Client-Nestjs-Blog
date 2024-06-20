@@ -45,7 +45,7 @@ export default function SignUp() {
         authApi.login(formData)
             .then(response => {
                 toast.success("Login successfully");
-                const token = response.data.accesstoken;
+                const token = response?.data?.accesstoken;
                 const refresh_token = response?.data?.refreshtoken;
                 localStorage.setItem("token", token);
                 localStorage.setItem("refresh_token", refresh_token);
@@ -62,7 +62,8 @@ export default function SignUp() {
                 dispatch(authSlice.actions.login({ checkLogin: true, user: decoded, token: token, refresh_token: refresh_token }));
             })
             .catch(error => {
-                toast.error(error.response.data.message);
+                console.log(error)
+                toast.error(error?.response?.data.message);
             })
     }
 

@@ -20,8 +20,8 @@ const usersApi = {
     const url = `/users/search?q=${data}`;
     return axiosClient.get(url);
   },
-  listUser(page) {
-    const url = `/users?page=${page}`;
+  listAllUser(page, search) {
+    const url = `/users/search?page=${page}&q=${search}`;
     return axiosClient.get(url);
   },
   getUserById(data) {
@@ -38,8 +38,10 @@ const usersApi = {
     return axiosClient.put(url, rest);
   },
   deleteUser(data) {
-    const url = `/users/${data}`;
-    return axiosClient.delete(url);
+    const url = `/users/many`;
+    return axiosClient.delete(url, {
+      data: { data },
+    });
   },
 };
 

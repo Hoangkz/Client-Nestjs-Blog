@@ -16,7 +16,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 import {
     Table,
     Thead,
@@ -30,13 +30,13 @@ import { toast } from "react-toastify";
 
 
 export default function ListUser() {
-  
+
     const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [checkboxList, setCheckboxList] = useState([]);
     const [checkDelete, setCheckDelete] = useState(false);
     const [deleteAccount, setDeleteAccount] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
-    
+
     const user = useSelector(tokenRemainingSelector).user;
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
@@ -54,11 +54,8 @@ export default function ListUser() {
         (async () => {
             setCheckDelete(false)
             try {
-                const formData = new FormData();
-                formData.append('id', user?._id);
-                formData.append('search', search);
-                const res = await usersApi.listUser(formData, currentPage);
-                const listCheckBox = res.data.user.map(user => {
+                const res = await usersApi.listAllUser(currentPage, search);
+                const listCheckBox = res?.data.users.map(user => {
                     return {
                         ...user,
                         isChecked: false
@@ -67,18 +64,18 @@ export default function ListUser() {
                 setIsCheckedAll(false)
                 setCheckboxList(listCheckBox)
                 setDataUser(res.data);
-                
+
             } catch (error) {
-                toast.error(error.response.data.message)
-                if (error.response.status === 403) {
+                toast.error(error.response?.data?.message)
+                if (error.status === 403) {
                     navigate('/forbidden');
                 }
                 setDataUser("")
             }
         })();
-    }, [deleteAccount,currentPage,checkSearch]);
+    }, [deleteAccount, currentPage, checkSearch]);
 
-    const handleSearchAccount = ()=>{
+    const handleSearchAccount = () => {
         setCheckSearch(!checkSearch)
     }
     const handleCheckboxChange = (event, index) => {
@@ -122,29 +119,29 @@ export default function ListUser() {
     }
     const handleClickDelete = (e) => {
         const listDelete = checkboxList.filter(checkbox => checkbox.isChecked)
-        const list_id = listDelete.map(checkbox => checkbox._id)
-        const formData = new FormData();
-        formData.append("listId", list_id)
-        formData.append("id", user?._id)
+        const list_id = listDelete.map(checkbox => checkbox.id)
+        const formData = {
+            listid: [...list_id]
+        }
         usersApi.deleteUser(formData)
-        .then((response) => {
-            onClose()
-            toast.success(response.data.message)
-            setDeleteAccount(!deleteAccount)
-        })
-        .catch((error) => {
-            toast.error(error.response.data.message)
-            if (error.response.status === 403) {
-                navigate('/forbidden');
-            }
-        });
+            .then((response) => {
+                onClose()
+                toast.success(response.data.message)
+                setDeleteAccount(!deleteAccount)
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message)
+                if (error.response.status === 403) {
+                    navigate('/forbidden');
+                }
+            });
     }
     return (
         <>
             <Box maxW="90%" mx={"auto"}>
                 <Box backgroundColor="#fff" position={"relative"}>
                     <Box color="rgb(149, 147, 147);">
-                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">DANH SÁCH ACCOUNT</Heading>
+                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">LIST ACCOUNT</Heading>
                     </Box>
                     {checkDelete &&
                         <Button onClick={onOpen} style={{ position: "absolute", top: "16px", right: "30%" }} _hover={{ opacity: "0.8" }}>
@@ -152,23 +149,23 @@ export default function ListUser() {
                         </Button>
                     }
                     <Flex style={{ position: "absolute", top: "16px", right: "10px" }}>
-                        <Input placeholder="Tên đăng nhập" onChange={(e)=>setSearch(e.target.value)} />
+                        <Input placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
                         <Button ml={"2px"} onClick={handleSearchAccount}>Search</Button>
                     </Flex>
                     <Modal isOpen={isOpen} onClose={onClose}>
                         <ModalOverlay />
                         <ModalContent>
-                            <ModalHeader>Xoá tài khoản</ModalHeader>
+                            <ModalHeader>Delete Acount</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                 <Text>
-                                    Bạn có muốn các tài khoản đã đánh dấu hay không?
+                                    Do you want to delete the marked accounts?
                                 </Text>
                             </ModalBody>
 
                             <ModalFooter>
-                                <Button onClick={handleClickDelete} colorScheme='red' mr={3} >Xoá</Button> 
-                                <Button variant='ghost' onClick={onClose}>Huỷ</Button>
+                                <Button onClick={handleClickDelete} colorScheme='red' mr={3} >Delete</Button>
+                                <Button variant='ghost' onClick={onClose}>Cancel</Button>
                             </ModalFooter>
                         </ModalContent>
                     </Modal>
@@ -184,18 +181,23 @@ export default function ListUser() {
                                                     onChange={handleCheckboxAllChange}>
                                                 </Checkbox>
                                             </Th>
-                                            <Th p={"8px 12px"} >STT</Th>
-                                            <Th p={"8px 12px"}>Tên đăng nhập</Th>
-                                            <Th>Họ và tên</Th>
-                                            <Th>Ngày sinh</Th>
-                                            <Th maxW={"150px"}>Email</Th>
-                                            <Th>Số điện thoại</Th>
-                                            <Th>Loại tài khoản</Th>
+                                            <Th p={"8px 12px"} >No.</Th>
+                                            <Th p={"8px 12px"}>Email</Th>
+                                            <Th>First name</Th>
+                                            <Th>Last name</Th>
+                                            <Th>Gender</Th>
+                                            <Th maxW={"150px"}>birthday</Th>
+                                            <Th>Phone</Th>
+                                            <Th>Role</Th>
+                                            <Th>Create At</Th>
+                                            <Th>Update At</Th>
                                             <Th textAlign={"center"}></Th>
                                         </Tr>
                                     </Thead>
                                     {checkboxList.map((user, index) => {
                                         const date = user?.birthday || null
+                                        const date1 = user?.createdAt || null
+                                        const date2 = user?.updatedAt || null
                                         return (
                                             <Tbody key={index}>
                                                 <Tr>
@@ -206,14 +208,17 @@ export default function ListUser() {
                                                         ></Checkbox>
                                                     </Td>
                                                     <Td p={"8px 16px"}>{index + 1}</Td>
-                                                    <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link >{user.username}</Link></Td>
-                                                    <Td>{user.fullname}</Td>
+                                                    <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link >{user.email}</Link></Td>
+                                                    <Td>{user.firstname}</Td>
+                                                    <Td>{user.lastname}</Td>
+                                                    <Td>{user.gender}</Td>
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>
-                                                    <Td whiteSpace="break-spaces">{user.extname}</Td>
-                                                    <Td>{user.tell}</Td>
+                                                    <Td>{user.phone}</Td>
                                                     <Td>{user.role === 3 ? "Admin" : user.role === 2 ? "Nhân viên" : "Khách hàng"}</Td>
+                                                    <Td>{date1 && format(new Date(date1), 'dd/MM/yyyy')}</Td>
+                                                    <Td>{date2 && format(new Date(date2), 'dd/MM/yyyy')}</Td>
                                                     <Td>
-                                                        <Button colorScheme='green' onClick={() => { handleClickUpdate(user._id) }} mr={"10px"}>Update</Button>
+                                                        <Button colorScheme='green' onClick={() => { handleClickUpdate(user.id) }} mr={"10px"}>Update</Button>
                                                     </Td>
                                                 </Tr>
                                             </Tbody>
@@ -221,25 +226,35 @@ export default function ListUser() {
                                     })}
                                 </Table>
                             </TableContainer>
-                            <Flex p="4" justify={"center"}>
-                                <ReactPaginate
-                                    previousLabel={'<<'}
-                                    nextLabel={'>>'}
-                                    breakLabel={"..."}
-                                    pageCount={dataUser?.pageLength}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={3}
-                                    onPageChange={handlePageClick}
-                                    containerClassName={"pagination"}
-                                    pageClassName={"page-item"}
-                                    pageLinkClassName={"page-link"}
-                                    activeClassName={"active"}
-                                />
-                            </Flex>
+                            {
+                                dataUser?.pagination?.pageLength > 0 ?
+                                    <Flex p="4" justify={"center"}>
+                                        <ReactPaginate
+                                            previousLabel={'<<'}
+                                            nextLabel={'>>'}
+                                            breakLabel={"..."}
+                                            pageCount={dataUser?.pagination?.pageLength}
+                                            marginPagesDisplayed={2}
+                                            pageRangeDisplayed={3}
+                                            onPageChange={handlePageClick}
+                                            containerClassName={"pagination"}
+                                            pageClassName={"page-item"}
+                                            pageLinkClassName={"page-link"}
+                                            activeClassName={"active"}
+                                        />
+                                    </Flex>
+                                    :
+                                    <Box mt={50} h={100}>
+                                        <Text textAlign={"center"} fontSize="22px">
+                                            Not data
+                                        </Text>
+                                    </Box>
+                            }
+
                         </> :
                         (<Box h={100}>
                             <Text textAlign={"center"} fontSize="22px">
-                                Chưa có dữ liệu
+                                Not data
                             </Text>
                         </Box>)
                     }

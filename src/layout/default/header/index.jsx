@@ -73,7 +73,7 @@ export default function Header(props) {
       try {
         if (search.trim()) {
           const res = await itemApi.searchClient(search.trim());
-          setDataItem(res.data.items);
+          setDataItem(res?.data?.items);
           setCheckDataItem(true)
         } else {
           setDataItem([]);
@@ -88,14 +88,14 @@ export default function Header(props) {
   const handleClickLogOut = (e) => {
     authApi.logout()
       .then((response) => {
-        toast.success(response.data.message);
+        toast.success(response?.data.message);
         dispatch(authSlice.actions.logout());
         localStorage.setItem("token", "null");
         localStorage.setItem("refresh_token", "null");
         localStorage.setItem("user", "null");
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error.response.message);
       })
   };
   const location = useLocation();
@@ -165,7 +165,7 @@ export default function Header(props) {
                       href="/auth/signup"
                       style={{ textDecoration: "none", color: "#fff" }}
                     >
-                      Login
+                      Register
                     </a>
                   </ListItem>
                   <ListItem className="navItem" margin="8px">
@@ -173,7 +173,7 @@ export default function Header(props) {
                       href={`/auth/login${locationHref ? locationHref : ""}`}
                       style={{ textDecoration: "none", color: "#fff" }}
                     >
-                      Register
+                      Login
                     </a>
                   </ListItem>
                 </>
@@ -193,7 +193,7 @@ export default function Header(props) {
                       </PopoverTrigger>
                       <PopoverContent w={"220px"}>
                         <PopoverArrow />
-                        <List>
+                        <List p={0}>
                           <ListItem className="navItem_hover">
                             <Link
                               to="/auth/user"
@@ -212,7 +212,7 @@ export default function Header(props) {
                             </>
                           ) : role === 3 ? (
                             <>
-                              <ListItem className="navItem_hover">
+                              <ListItem p="0px" className="navItem_hover">
                                 <Link
                                   to="/admin/list-user"
                                   style={{
@@ -223,6 +223,20 @@ export default function Header(props) {
                                 >
                                   <PopoverHeader p={"12px 16px"}>
                                     List User
+                                  </PopoverHeader>
+                                </Link>
+                              </ListItem>
+                              <ListItem className="navItem_hover">
+                                <Link
+                                  to="/admin/list-category"
+                                  style={{
+                                    display: "block",
+                                    color: "black",
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  <PopoverHeader p={"12px 16px"}>
+                                    List Categories
                                   </PopoverHeader>
                                 </Link>
                               </ListItem>

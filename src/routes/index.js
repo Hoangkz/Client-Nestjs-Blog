@@ -10,7 +10,10 @@ import Forbidden from "../layout/default/Forbidden";
 import UserUpdate from "../pages/admin/update_user";
 import ItemUpdate from "../pages/admin/update_items";
 import ListItems from "../pages/admin/list_items";
+import ListCategory from "../pages/admin/list_category";
 import CreateItems from "../pages/admin/create_items";
+import CreateCategory from "../pages/admin/create_category";
+import UpdateCategory from "../pages/admin/update_category";
 
 const publicRoutes = [
     //thêm layout để có layout riêng
@@ -56,6 +59,18 @@ const privateRoutes = [
     {
         path: "/admin/update-user/:slug",
         element: UserUpdate,
+    },
+    {
+        path: "/admin/list-category",
+        element: ListCategory,
+    },
+    {
+        path: "/admin/update-category",
+        element: UpdateCategory,
+    },
+    {
+        path: "/admin/create-category",
+        element: CreateCategory,
     },
     {
         path: "/admin/create-items",

@@ -30,7 +30,7 @@ import itemApi from "../../../API/itemApi";
 
 import update_items from "../../../components/update_items"
 
-export default function ListUser() {
+export default function ListCategory() {
 
     const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [checkboxList, setCheckboxList] = useState([]);
@@ -61,13 +61,10 @@ export default function ListUser() {
                     setCheckSearch(!checkSearch)
                     setCurrentPage(1)
                 }
-                const res = await itemApi.GetListItems(currentPage, search);
-                const listCheckBox = res?.data?.items.map(item => {
-                    const { category, ...rest } = item
+                const res = await itemApi.GetAllCategoryAdmin(currentPage, search);
+                const listCheckBox = res?.data?.listCategory.map(item => {
                     return {
-                        ...rest,
-                        nameCategory: category?.name,
-                        idCategory: category?.id,
+                        ...item,
                         isChecked: false,
                     }
                 })
@@ -128,7 +125,7 @@ export default function ListUser() {
 
     const handleClickUpdate = (e) => {
         dispatch(update_items.actions.update(e))
-        navigate(`/admin/update-items`);
+        navigate(`/admin/update-category`);
     }
     const handleClickDelete = (e) => {
         const listDelete = checkboxList.filter(checkbox => checkbox.isChecked)
@@ -136,7 +133,7 @@ export default function ListUser() {
         const formData = {
             listid: [...list_id]
         }
-        itemApi.delete_Items(formData)
+        itemApi.delete_Category(formData)
             .then((response) => {
                 onClose()
                 toast.success(response.data.message)
@@ -151,14 +148,14 @@ export default function ListUser() {
     }
 
     const handleClickCreate = (e) => {
-        navigate('/admin/create-items');
+        navigate('/admin/create-category');
     }
     return (
         <>
             <Box maxW="90%" mx={"auto"}>
                 <Box backgroundColor="#fff" position={"relative"}>
                     <Box color="rgb(149, 147, 147);">
-                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">LIST ITEMS</Heading>
+                        <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px">LIST CATEGORY</Heading>
                     </Box>
                     <Flex style={{ position: "absolute", top: "16px", right: "10px" }}>
                         <Box>
@@ -169,21 +166,21 @@ export default function ListUser() {
                             }
                         </Box>
                         <Box m={"0 8px"}>
-                            <Button onClick={handleClickCreate} colorScheme={"blue"}>Create Item</Button>
+                            <Button onClick={handleClickCreate} colorScheme={"blue"}>Create Category</Button>
                         </Box>
                         <Flex>
-                            <Input placeholder="Items" onChange={(e) => setSearch(e.target.value)} />
+                            <Input placeholder="Category" onChange={(e) => setSearch(e.target.value)} />
                             <Button ml={"2px"} onClick={handleSearchAccount}>Search</Button>
                         </Flex>
                     </Flex>
                     <Modal isOpen={isOpen} onClose={onClose}>
                         <ModalOverlay />
                         <ModalContent>
-                            <ModalHeader>Delete Items</ModalHeader>
+                            <ModalHeader>Delete Category</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                 <Text>
-                                    Do you want to delete marked items?
+                                    Do you want to delete marked Category?
                                 </Text>
                             </ModalBody>
 
@@ -208,9 +205,6 @@ export default function ListUser() {
                                             <Th p={"8px 12px"} >No.</Th>
                                             <Th p={"8px 12px"}>Name item</Th>
                                             <Th>Image</Th>
-                                            <Th>Description</Th>
-                                            <Th>Quatity</Th>
-                                            <Th>Category</Th>
                                             <Th>Create At</Th>
                                             <Th>Update At</Th>
                                             <Th p={0} ></Th>
@@ -230,12 +224,8 @@ export default function ListUser() {
                                                     </Td>
                                                     <Td p={"8px 16px"}>{index + 1}</Td>
                                                     <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link to={`/item/${item.id}`} >{item.name}</Link></Td>
-                                                    <Td ><img width="50px" src={`${process.env.REACT_APP_API_URL}/${item?.imageitem}`} /></Td>
-                                                    <Td>{item.description}</Td>
-                                                    <Td>{item.quatity}</Td>
-                                                    <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue"  >
-                                                        <Link to={`/category/${item.idCategory}`}>{item.nameCategory}</Link>
-                                                    </Td>
+                                                    <Td ><img width="50px" src={`${process.env.REACT_APP_API_URL}/${item?.thumbnail}`} /></Td>
+
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>
                                                     <Td>{date && format(new Date(date1), 'dd/MM/yyyy')}</Td>
                                                     <Td p={"0"}>
@@ -247,21 +237,30 @@ export default function ListUser() {
                                     })}
                                 </Table>
                             </TableContainer>
-                            <Flex p="4" justify={"center"}>
-                                <ReactPaginate
-                                    previousLabel={'<<'}
-                                    nextLabel={'>>'}
-                                    breakLabel={"..."}
-                                    pageCount={dataItems?.pagination?.pageLength}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={3}
-                                    onPageChange={handlePageClick}
-                                    containerClassName={"pagination"}
-                                    pageClassName={"page-item"}
-                                    pageLinkClassName={"page-link"}
-                                    activeClassName={"active"}
-                                />
-                            </Flex>
+                            {dataItems?.pagination?.pageLength > 0 ?
+                                <Flex p="4" justify={"center"}>
+                                    <ReactPaginate
+                                        previousLabel={'<<'}
+                                        nextLabel={'>>'}
+                                        breakLabel={"..."}
+                                        pageCount={dataItems?.pagination?.pageLength}
+                                        marginPagesDisplayed={2}
+                                        pageRangeDisplayed={3}
+                                        onPageChange={handlePageClick}
+                                        containerClassName={"pagination"}
+                                        pageClassName={"page-item"}
+                                        pageLinkClassName={"page-link"}
+                                        activeClassName={"active"}
+                                    />
+                                </Flex>
+                                : (<Box mt={100} h={100}>
+                                    <Text textAlign={"center"} fontSize="22px">
+                                        Not data
+                                    </Text>
+                                </Box>)
+
+                            }
+
                         </> :
                         (<Box h={100}>
                             <Text textAlign={"center"} fontSize="22px">

@@ -17,7 +17,6 @@ export default function Home() {
         (async () => {
             try {
                 const res = await itemApi.GetAllCategory();
-                console.log(res)
                 setCategory(res.data);
             } catch (error) {
                 setDataItem(null);
@@ -28,7 +27,8 @@ export default function Home() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await itemApi.GetListItems(currentPage);
+                const res = await itemApi.GetListItemsHone(currentPage);
+                console.log(res)
                 setDataItem(res.data);
             } catch (error) {
                 setDataItem(null);
@@ -42,13 +42,13 @@ export default function Home() {
                     <Box color="rgb(149, 147, 147);">
                         <Heading fontSize="1.25rem" lineHeight={1.2} fontWeight="500" p="16px" m={0}>Category</Heading>
                     </Box>
-                    <Flex flexWrap={"wrap"} maxW="80%">
+                    <Flex flexWrap={"wrap"} >
                         {category.map((item, index) => {
                             return (
                                 <Box key={index} className="danhmuchover" border="1px solid rgba(0,0,0,.125)" w="126px" borderRadius="0.25rem">
                                     <Link to={`/list-items/${item?.id}`}>
-                                        <Image src={process.env.REACT_APP_API_URL + item?.thumbnail} w="124px"></Image>
-                                        <Box className="col" w="124px" textAlign={"center"} color="black">
+                                        <Image src={process.env.REACT_APP_API_URL + "/" + item?.thumbnail} h="124px" w="124px"></Image>
+                                        <Box borderTop="1px solid #ccc" className="col" w="124px" textAlign={"center"} color="black">
                                             {item?.name}
                                         </Box>
                                     </Link>
@@ -56,8 +56,8 @@ export default function Home() {
                             )
                         })}
                     </Flex>
-                </Box>
-            </Box>
+                </Box >
+            </Box >
 
             <Box backgroundColor="antiquewhite" pt={50} >
                 <Box backgroundColor="#fff" maxW="80%" mx={"auto"}>
@@ -68,12 +68,12 @@ export default function Home() {
                         <>
                             {currentPage - 1 < dataItem?.pagination?.pageLength ?
                                 <>
-                                    <Flex flexWrap={"wrap"} m="0 30px">
-                                        {dataItem.data?.map((item, index) => {
+                                    <Flex flexWrap={"wrap"} m="0 30px" justify={dataItem.items.length === 10 ? "center" : "left"} >
+                                        {dataItem.items?.map((item, index) => {
                                             return (
                                                 <Box m="0 2px" key={index} className="danhmuchover" border="1px solid rgba(0,0,0,.125)" w="135px" borderRadius="0.25rem">
-                                                    <Link to={`/items/${item?.name}`}>
-                                                        <Image border="1px solid #ccc" src={item?.imageitem} minH="135px" minW="135px" w="135px" alt={item?.name}></Image>
+                                                    <Link to={`/items/${item?.id}`}>
+                                                        <Image border="1px solid #ccc" src={process.env.REACT_APP_API_URL + '/' + item?.imageitem} minH="135px" minW="135px" h="135px" w="135px" alt={item?.name}></Image>
                                                         <Box mt={8} className="col" w="135px" textAlign={"center"} color="black">
                                                             {item?.name}
                                                         </Box>
@@ -127,7 +127,7 @@ export default function Home() {
                     }
 
                 </Box>
-            </Box>
+            </Box >
         </>
     )
 }
