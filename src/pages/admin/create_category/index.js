@@ -1,18 +1,12 @@
 import { Input } from "@chakra-ui/input";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Button, Select } from '@chakra-ui/react'
-import { startTransition, useEffect, useState } from "react";
+import { Button } from '@chakra-ui/react'
+import { startTransition, useState } from "react";
 import { toast } from "react-toastify";
 import itemApi from "../../../API/itemApi";
-import { tokenRemainingSelector } from "../../../redux/selectors";
-import { useSelector } from "react-redux";
 export default function CreateCategory() {
     const [nameSP, setNameSP] = useState('');
     const [linkIMG, setLinkIMG] = useState(null);
-
-
-    const dataUser = useSelector(tokenRemainingSelector).user;
-
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {

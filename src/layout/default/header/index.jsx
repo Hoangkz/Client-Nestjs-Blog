@@ -88,11 +88,12 @@ export default function Header(props) {
   const handleClickLogOut = (e) => {
     authApi.logout()
       .then((response) => {
-        toast.success(response?.data.message);
-        dispatch(authSlice.actions.logout());
+        toast.success("Logout!");
         localStorage.setItem("token", "null");
         localStorage.setItem("refresh_token", "null");
         localStorage.setItem("user", "null");
+        dispatch(authSlice.actions.logout());
+
       })
       .catch((error) => {
         toast.error(error.response.message);

@@ -4,8 +4,7 @@ import { Box, Button, Checkbox, Flex, Heading, Text, Icon, useDisclosure, Input 
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { tokenRemainingSelector } from "../../../redux/selectors";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { format } from 'date-fns';
 import {
     Modal,
@@ -37,8 +36,6 @@ export default function ListCategory() {
     const [checkDelete, setCheckDelete] = useState(false);
     const [deleteAccount, setDeleteAccount] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const user = useSelector(tokenRemainingSelector).user;
 
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
