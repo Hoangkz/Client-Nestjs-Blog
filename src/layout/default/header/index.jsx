@@ -91,7 +91,6 @@ export default function Header(props) {
       .then((response) => {
         toast.success("Logout!");
         localStorage.setItem("token", "null");
-        localStorage.setItem("refresh_token", "null");
         localStorage.setItem("user", "null");
         dispatch(authSlice.actions.logout());
 

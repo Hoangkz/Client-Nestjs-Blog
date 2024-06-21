@@ -46,9 +46,7 @@ export default function SignUp() {
             .then(response => {
                 toast.success("Login successfully");
                 const token = response?.data?.accesstoken;
-                const refresh_token = response?.data?.refreshtoken;
                 localStorage.setItem("token", token);
-                localStorage.setItem("refresh_token", refresh_token);
                 const decoded = jwt_decode(token);
                 localStorage.setItem("user", JSON.stringify(decoded));
                 const urlParams = new URLSearchParams(window.location.search);
@@ -59,7 +57,7 @@ export default function SignUp() {
                 else {
                     navigate('/');
                 }
-                dispatch(authSlice.actions.login({ checkLogin: true, user: decoded, token: token, refresh_token: refresh_token }));
+                dispatch(authSlice.actions.login({ checkLogin: true, user: decoded, token: token }));
             })
             .catch(error => {
                 console.log(error)
