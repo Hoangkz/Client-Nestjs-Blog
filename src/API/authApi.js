@@ -14,7 +14,7 @@ const authApi = {
     return axiosClient.post(url, refresh_token);
   },
   signup(data) {
-    const url = "/auth/signup";
+    const url = "/auth/register";
     return axiosClient.post(url, data);
   }
 };

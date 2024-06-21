@@ -35,12 +35,12 @@ const itemApi = {
     const url = `/item/search?q=${query}&page=${page}`;
     return axiosClient.get(url);
   },
-  GetItemByCategoryId(id) {
-    const url = `/item/category/${id}`;
+  GetItemByCategoryId(id, page) {
+    const url = `/item/category?id=${id}&page=${page}`;
     return axiosClient.get(url);
   },
-  GetListItems(page, search) {
-    const url = `/item?page=${page}&search=${search}`;
+  GetListItems(page, search, count) {
+    const url = `/item?page=${page}&search=${search}&count=${count}`;
     return axiosClient.get(url);
   },
   GetListItemsHone(page) {

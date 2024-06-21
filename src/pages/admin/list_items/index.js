@@ -4,8 +4,7 @@ import { Box, Button, Checkbox, Flex, Heading, Text, Icon, useDisclosure, Input 
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { tokenRemainingSelector } from "../../../redux/selectors";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { format } from 'date-fns';
 import {
     Modal,
@@ -38,7 +37,6 @@ export default function ListUser() {
     const [deleteAccount, setDeleteAccount] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const user = useSelector(tokenRemainingSelector).user;
 
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
@@ -61,7 +59,7 @@ export default function ListUser() {
                     setCheckSearch(!checkSearch)
                     setCurrentPage(1)
                 }
-                const res = await itemApi.GetListItems(currentPage, search);
+                const res = await itemApi.GetListItems(currentPage, search, -2);
                 const listCheckBox = res?.data?.items.map(item => {
                     const { category, ...rest } = item
                     return {
@@ -234,7 +232,7 @@ export default function ListUser() {
                                                     <Td>{item.description}</Td>
                                                     <Td>{item.quatity}</Td>
                                                     <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue"  >
-                                                        <Link to={`/category/${item.idCategory}`}>{item.nameCategory}</Link>
+                                                        <Link to={`/list-items/${item.idCategory}`}>{item.nameCategory}</Link>
                                                     </Td>
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>
                                                     <Td>{date && format(new Date(date1), 'dd/MM/yyyy')}</Td>
@@ -247,21 +245,30 @@ export default function ListUser() {
                                     })}
                                 </Table>
                             </TableContainer>
-                            <Flex p="4" justify={"center"}>
-                                <ReactPaginate
-                                    previousLabel={'<<'}
-                                    nextLabel={'>>'}
-                                    breakLabel={"..."}
-                                    pageCount={dataItems?.pagination?.pageLength}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={3}
-                                    onPageChange={handlePageClick}
-                                    containerClassName={"pagination"}
-                                    pageClassName={"page-item"}
-                                    pageLinkClassName={"page-link"}
-                                    activeClassName={"active"}
-                                />
-                            </Flex>
+
+                            {dataItems?.pagination?.pageLength > 0 ?
+                                <Flex p="4" justify={"center"}>
+                                    <ReactPaginate
+                                        previousLabel={'<<'}
+                                        nextLabel={'>>'}
+                                        breakLabel={"..."}
+                                        pageCount={dataItems?.pagination?.pageLength}
+                                        marginPagesDisplayed={2}
+                                        pageRangeDisplayed={3}
+                                        onPageChange={handlePageClick}
+                                        containerClassName={"pagination"}
+                                        pageClassName={"page-item"}
+                                        pageLinkClassName={"page-link"}
+                                        activeClassName={"active"}
+                                    />
+                                </Flex> :
+                                <Box mt={50} h={100}>
+                                    <Text textAlign={"center"} fontSize="22px">
+                                        Not data
+                                    </Text>
+                                </Box>
+                            }
+
                         </> :
                         (<Box h={100}>
                             <Text textAlign={"center"} fontSize="22px">

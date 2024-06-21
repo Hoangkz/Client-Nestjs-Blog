@@ -13,7 +13,7 @@ export default function Facebook() {
         fields="name,email,picture"
         cssClass="facebook"
         icon={<Icon className='iconFacebook' color={"#4c69ba"} as={FaFacebook} />}
-        textButton={<Box fontWeight="500" fontFamily="Google Sans, arial,sans-serif" color="#3c4043" letterSpacing="0.25px" textOverflow="ellipsis">Đăng nhập với Facebook</Box>}
+        textButton={<Box fontWeight="500" fontFamily="Google Sans, arial,sans-serif" color="#3c4043" letterSpacing="0.25px" textOverflow="ellipsis">Connect with Facebook</Box>}
       />
     </Box>
   )

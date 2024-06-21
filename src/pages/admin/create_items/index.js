@@ -4,8 +4,6 @@ import { Button, Select } from '@chakra-ui/react'
 import { startTransition, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import itemApi from "../../../API/itemApi";
-import { tokenRemainingSelector } from "../../../redux/selectors";
-import { useSelector } from "react-redux";
 export default function CreateItems() {
     const [nameSP, setNameSP] = useState('');
     const [descSP, setDescSP] = useState('');
@@ -14,8 +12,8 @@ export default function CreateItems() {
     const [soLuong, setSoLuong] = useState(0);
     const [checkSoLuong, setCheckSoLuong] = useState(false);
 
+    const [imageDefault, setImageDefault] = useState(null);
 
-    const dataUser = useSelector(tokenRemainingSelector).user;
     const [listCategory, setListCategory] = useState([]);
 
     useEffect(() => {
@@ -36,6 +34,7 @@ export default function CreateItems() {
         const file = e.target.files[0];
         if (file) {
             setLinkIMG(file);
+            setImageDefault(URL.createObjectURL(file))
         } else {
             console.log("No file selected");
         }
@@ -71,7 +70,7 @@ export default function CreateItems() {
                 });
         }
         else {
-            toast.error("Hãy nhập đầy đủ các trường")
+            toast.error("Please fill in all the fields")
         }
     }
 
@@ -106,12 +105,18 @@ export default function CreateItems() {
                         </Box>
                         <Box mt="10px">
                             <label htmlFor="img" style={{ fontSize: "16px" }}>Choose image</label>
+                            {imageDefault && (
+                                <Box tranpetion mt="10px">
+                                    <img src={imageDefault} alt="Selected" style={{ width: '200px', maxWidth: '200px' }} />
+                                </Box>
+                            )}
                             <Input
                                 id="img"
                                 type="file"
                                 accept="image/*"
                                 backgroundColor='#fff'
                                 onChange={handleImageChange}
+                                border="1px solid transparent"
                                 mt="10px"
                             />
                         </Box>

@@ -72,9 +72,10 @@ export default function Header(props) {
     (async () => {
       try {
         if (search.trim()) {
-          const res = await itemApi.searchClient(search.trim());
+          const res = await itemApi.search(search.trim(), -1);
           setDataItem(res?.data?.items);
           setCheckDataItem(true)
+          console.log(res.data)
         } else {
           setDataItem([]);
         }
@@ -305,7 +306,7 @@ export default function Header(props) {
                     top="100"
                   >
                     <Box p={"10px 18px"} backgroundColor="#ddd">
-                      Từ khoá tìm kiếm "{search}"
+                      Search keywords "{search}"
                     </Box>
                     <List>
                       <ListItem>
@@ -316,7 +317,7 @@ export default function Header(props) {
                                 key={index}
                                 onClick={handleClickLink}
                                 tabIndex="100"
-                                to={`/items/${data?.name}`}
+                                to={`/items/${data?.id}`}
                               >
                                 <Box
                                   _hover={{
@@ -330,7 +331,7 @@ export default function Header(props) {
                                   }}
                                 >
                                   <Image
-                                    src={data?.img}
+                                    src={process.env.REACT_APP_API_URL + "/" + data?.imageitem}
                                     alt={data?.name}
                                     style={{ width: "60px" }}
                                   />

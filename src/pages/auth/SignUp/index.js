@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, Input, Select, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import "../auth.css"
 import { useState, startTransition, useEffect } from "react";
@@ -15,30 +15,25 @@ export default function SignUp() {
     }
     const navigate = useNavigate();
 
-    const [formUserName, setFormUserName] = useState("");
+    const [email, setEmail] = useState("");
     const [formPassword, setFormPassword] = useState("");
     const [formPasswordComfirm, setFormPasswordComfirm] = useState("");
 
-    const [userNameError, setUserNameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [passwordComfirmError, setPasswordComfirmError] = useState(false);
 
     const [checkPasswordForm, setCheckPasswordForm] = useState(false);
 
-    const handleChangeFormUserName = (e) => {
-        const value = e.target.value;
-        setFormUserName(value);
-        if (value.length < 5) {
-            setUserNameError(true);
-        } else {
-            setUserNameError(false);
-        }
-    }
+    const [lastname, setLastName] = useState("")
+    const [firstname, setFirstName] = useState("")
+    const [phone, setPhone] = useState()
+    const [address, setAddress] = useState()
+    const [gender, setGender] = useState("male")
 
     const handleChangeFormPassword = (e) => {
         const value = e.target.value;
         setFormPassword(value);
-        if (value.length < 5) {
+        if (value.length < 6) {
             setPasswordError(true);
         } else {
             setPasswordError(false);
@@ -48,7 +43,7 @@ export default function SignUp() {
     const handleChangeFormPasswordComfirm = (e) => {
         const value = e.target.value;
         setFormPasswordComfirm(value);
-        if (value.length < 5) {
+        if (value.length < 6) {
             setPasswordComfirmError(true);
         } else {
             setPasswordComfirmError(false);
@@ -65,12 +60,22 @@ export default function SignUp() {
     }, [formPassword, formPasswordComfirm])
 
     const handleSubmitForm = (e) => {
-        e.preventDefault(); // Ngăn chặn sự kiện submit mặc định của form
-        // Xử lý logic đăng ký ở đây
-        if (formUserName.length >= 5 && formPassword.length >= 5 && formPasswordComfirm === formPassword) {
-            const formData = new FormData();
-            formData.append('username', formUserName);
-            formData.append('password', formPassword);
+        e.preventDefault();
+        if (formPassword.length >= 6 && formPasswordComfirm === formPassword && firstname && lastname && email) {
+            if (phone.length != 10 && phone) {
+                toast.error("The phone number must contain 10 characters");
+                return
+            }
+            const formData = {
+                email,
+                'password': formPassword,
+                firstname,
+                lastname,
+                email,
+                address,
+                phone,
+                gender
+            }
             authApi.signup(formData)
                 .then(response => {
                     toast.success(response.data.message);
@@ -80,9 +85,12 @@ export default function SignUp() {
                     toast.error(error.response.data.message);
                 })
         }
+        else {
+            toast.error("Please fill in all the fields")
+        }
+
+
     };
-
-
 
     return (
         <>
@@ -98,63 +106,94 @@ export default function SignUp() {
                                 <Box>
                                     <Link to={"/"}>
                                         <Box textAlign={"center"}>
-                                            <Icon fontSize="40px" color={"#fe6433"} as={TiHomeOutline} />
-                                            <Box color={"#fe6433"} fontSize="24px" fontWeight="700" mt={"-4px"}>
+                                            <Icon fontSize="32px" color={"#fe6433"} as={TiHomeOutline} />
+                                            <Box color={"#fe6433"} fontSize="20px" fontWeight="700" >
                                                 Home
                                             </Box>
                                         </Box>
                                     </Link>
                                 </Box>
-                                <Box m={"0 8px 20px"}>
-                                    <Flex justify={"space-between"} mt="18px" mb="32px">
+                                <Box m={"0 8px 12px"}>
+                                    <Flex justify={"space-between"} mt="18px" mb="12px">
                                         <Box fontWeight={600} fontSize="18px">
-                                            Đăng ký
+                                            Register
                                         </Box>
                                         <Box _hover={{ "opacity": '0.6' }}>
                                             <a href={"/auth/login"}>
                                                 <Box fontWeight={700} fontSize="15px" color={"#ea4d2d"}>
-                                                    Đăng nhập
+                                                    Login
                                                 </Box>
                                             </a>
                                         </Box>
                                     </Flex>
                                 </Box>
                                 <Box>
-                                    <Box m={"24px 0"} position="relative">
-                                        <Input onChange={handleChangeFormUserName} placeholder="Email/Số điện thoại" border={"2px solid #ccc"} />
-                                        {userNameError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Tài khoản phải có ít nhất 5 ký tự!</span>}
+                                    <Box position="relative">
+                                        <Text m="auto">Email</Text>
+                                        <Input type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email" border={"2px solid #ccc"} />
                                     </Box>
-                                    <Box m={"24px 0"} position="relative">
-                                        <Input onChange={handleChangeFormPassword} placeholder="Mật khẩu" type={"password"} border={"2px solid #ccc"} />
-                                        {passwordError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Mật khẩu phải có ít nhất 5 ký tự!</span>}
+                                    <Flex w="100%" m={"12px 0"} position="relative" justify={"space-between"}>
+                                        <Box w="45%">
+                                            <Text m="auto">First Name</Text>
+                                            <Input onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" border={"2px solid #ccc"} />
+                                        </Box>
+                                        <Box w="45%">
+                                            <Text m="auto">Last Name</Text>
+                                            <Input onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" border={"2px solid #ccc"} />
+                                        </Box>
+                                    </Flex>
+                                    <Flex m={"12px 0"} position="relative" justify={"space-between"}>
+                                        <Box w="28%">
+                                            <Text m="auto">Gender</Text>
+                                            <Select border={"2px solid #ccc"} defaultValue="male" onChange={(e) => setGender(e.target.value)}>
+                                                <option value='male'>Male</option>
+                                                <option value='female'>Female</option>
+                                                <option value='other'>Other</option>
+                                            </Select>
+                                        </Box>
+                                        <Box w="35%">
+                                            <Text m="auto">Phone</Text>
+                                            <Input type="number" maxW={150} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" border={"2px solid #ccc"} />
+                                        </Box>
+                                        <Box w="35%">
+                                            <Text m="auto">Address</Text>
+                                            <Input maxW={150} onChange={(e) => setAddress(e.target.value)} placeholder="Address" border={"2px solid #ccc"} />
+                                        </Box>
+                                    </Flex>
+                                    <Box m={"12px 0"} position="relative">
+                                        <Text m="auto">Password</Text>
+                                        <Input onChange={handleChangeFormPassword} placeholder="Password" type={"password"} border={"2px solid #ccc"} />
+                                        {passwordError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Password must have at least 6 characters!</span>}
                                     </Box>
-                                    <Box m={"24px 0"} position="relative">
-                                        <Input onChange={handleChangeFormPasswordComfirm} placeholder="Nhập lại mật khẩu" type={"password"} border={"2px solid #ccc"} />
-                                        {passwordComfirmError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Mật khẩu phải có ít nhất 5 ký tự!</span>}
-                                        {(checkPasswordForm && !passwordComfirmError) && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Mật khẩu và mật khẩu nhập lại không giống nhau!</span>}
+                                    <Box mt="18px" position="relative">
+                                        <Text m="auto">Confirm Password</Text>
+                                        <Input onChange={handleChangeFormPasswordComfirm} placeholder="Confirm Password" type={"password"} border={"2px solid #ccc"} />
+                                        {passwordComfirmError && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Password must have at least 6 characters!</span>}
+                                        {(checkPasswordForm && !passwordComfirmError) && <span style={{ color: 'red', fontSize: "13px", position: "absolute", bottom: "-20px", left: "1px" }}>Password and confirm password do not match!
+                                        </span>}
                                     </Box>
                                 </Box>
-                                <Box fontSize="12px" textAlign={"center"} color={"black"}>
+                                <Box mt={8} fontSize="12px" textAlign={"center"} color={"black"}>
                                     <span>
-                                        Bằng việc đăng ký, bạn đã đồng ý với Dalziel về
+                                        By registering, you agree to META APP
                                     </span>
                                     <Link to={"/"} style={{ 'margin': "0 2px", "color": "#ea4d2d", "fontWeight": "700" }} className="linkSupport">
-                                        Điều khoản dịch vụ
+                                        Terms of Service
                                     </Link>
                                     <span>&</span>
                                     <Text>
                                         <Link className="linkSupport" to={"/"} style={{ 'margin': "0 2px", "color": "#ea4d2d", "fontWeight": "700" }}>
-                                            Chính cách bảo mật
+                                            Privacy Policy
                                         </Link>
                                     </Text>
                                 </Box>
                                 <Flex justify={"end"} m="36px 0 32px">
                                     <Button onClick={handleClickGoBack} w={140} colorScheme='gray' size='md' variant={"outline"}>
-                                        Trở lại
+                                        Back
                                     </Button>
                                     <Box m={2}></Box>
                                     <Button type="submit" w={140} backgroundColor="#ea4d2d" color={"#fff"} _hover={{ "opacity": "0.7" }} size='md' >
-                                        Đăng ký
+                                        Register
                                     </Button>
                                 </Flex>
                             </Box>
@@ -168,8 +207,8 @@ export default function SignUp() {
                             </Box>
                         </form>
                     </Box>
-                </Flex>
-            </Box>
+                </Flex >
+            </Box >
         </>
     )
 }

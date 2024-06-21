@@ -220,7 +220,7 @@ export default function ListCategory() {
                                                         ></Checkbox>
                                                     </Td>
                                                     <Td p={"8px 16px"}>{index + 1}</Td>
-                                                    <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link to={`/item/${item.id}`} >{item.name}</Link></Td>
+                                                    <Td p={"8px 12px"} fontWeight={"500"} _hover={{ textDecoration: "underline" }} color="blue" ><Link to={`/list-items/${item.id}`} >{item.name}</Link></Td>
                                                     <Td ><img width="50px" src={`${process.env.REACT_APP_API_URL}/${item?.thumbnail}`} /></Td>
 
                                                     <Td>{date && format(new Date(date), 'dd/MM/yyyy')}</Td>

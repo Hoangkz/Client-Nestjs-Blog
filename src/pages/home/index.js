@@ -28,7 +28,6 @@ export default function Home() {
         (async () => {
             try {
                 const res = await itemApi.GetListItemsHone(currentPage);
-                console.log(res)
                 setDataItem(res.data);
             } catch (error) {
                 setDataItem(null);
@@ -101,21 +100,6 @@ export default function Home() {
                                     <Text textAlign={"center"} fontSize="22px">
                                         Not data
                                     </Text>
-                                    <Flex p="4" justify={"center"}>
-                                        <ReactPaginate
-                                            previousLabel={'<<'}
-                                            nextLabel={'>>'}
-                                            breakLabel={"..."}
-                                            pageCount={dataItem?.pageLength}
-                                            marginPagesDisplayed={2}
-                                            pageRangeDisplayed={3}
-                                            onPageChange={handlePageClick}
-                                            containerClassName={"pagination"}
-                                            pageClassName={"page-item"}
-                                            pageLinkClassName={"page-link"}
-                                            activeClassName={"active"}
-                                        />
-                                    </Flex>
                                 </Box>))
                             }
                         </>

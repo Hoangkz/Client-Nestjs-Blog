@@ -40,7 +40,7 @@ export default function UpdateCategory() {
                 });
         }
         else {
-            toast.error("Hãy nhập đầy đủ các trường")
+            toast.error("Please fill in all the fields")
         }
     }
 

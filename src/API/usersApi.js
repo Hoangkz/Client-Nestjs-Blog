@@ -11,7 +11,7 @@ const usersApi = {
     return axiosClient.post(url, data);
   },
   forgotpassword(data) {
-    const url = `/users/forgotPassword`;
+    const url = `/users/forgot-Password`;
     return axiosClient.post(url, data);
   },
 
@@ -35,6 +35,7 @@ const usersApi = {
   updateUser(data) {
     const { id, ...rest } = data
     const url = `/users/${id}`;
+    console.log(rest)
     return axiosClient.put(url, rest);
   },
   deleteUser(data) {

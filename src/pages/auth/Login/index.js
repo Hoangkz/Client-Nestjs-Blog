@@ -80,8 +80,8 @@ export default function SignUp() {
                                 <Box>
                                     <Link to={"/"}>
                                         <Box textAlign={"center"}>
-                                            <Icon fontSize="40px" color={"#fe6433"} as={TiHomeOutline} />
-                                            <Box color={"#fe6433"} fontSize="24px" fontWeight="700" mt={"-4px"}>
+                                            <Icon fontSize="32px" color={"#fe6433"} as={TiHomeOutline} />
+                                            <Box color={"#fe6433"} fontSize="20px" fontWeight="700" >
                                                 Home
                                             </Box>
                                         </Box>
@@ -90,12 +90,12 @@ export default function SignUp() {
                                 <Box m={"0 8px 20px"}>
                                     <Flex justify={"space-between"} mt="18px" mb="32px">
                                         <Box fontWeight={600} fontSize="18px">
-                                            Đăng nhập
+                                            Login
                                         </Box>
                                         <Box _hover={{ "opacity": '0.6' }}>
                                             <a href={"/auth/signup"}>
                                                 <Box fontWeight={700} fontSize="15px" color={"#ea4d2d"}>
-                                                    Đăng ký
+                                                    Register
                                                 </Box>
                                             </a>
                                         </Box>
@@ -113,16 +113,16 @@ export default function SignUp() {
                                     <ForgotPassword />
                                     <Box className="boderIcon" display="initial"></Box>
                                     <Link className="linkSupport" to={"/"} style={{ 'margin': "0 8px", "color": "#939393", "fontWeight": "700" }}>
-                                        Cần trợ giúp
+                                        Help
                                     </Link>
                                 </Box>
                                 <Flex justify={"end"} m="36px 0 32px">
                                     <Button onClick={handleClickGoBack} w={140} colorScheme='gray' size='md' variant={"outline"}>
-                                        Trở lại
+                                        Back
                                     </Button>
                                     <Box m={2}></Box>
                                     <Button type="submit" w={140} backgroundColor="#ea4d2d" color={"#fff"} _hover={{ "opacity": "0.7" }} size='md' >
-                                        Đăng nhập
+                                        Login
                                     </Button>
                                 </Flex>
                             </Box>

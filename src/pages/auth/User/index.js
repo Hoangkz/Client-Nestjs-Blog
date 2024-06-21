@@ -1,36 +1,48 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import usersApi from "../../../API/usersApi";
 import { tokenRemainingSelector } from "../../../redux/selectors";
 import "./user.css"
 import ChangePassword from "./ChangePassword"
-import { Box, Button, Flex, Heading, Input, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
-export default function User() {
-    const dataUser = useSelector(tokenRemainingSelector).user;
-    const [click, setClick] = useState(true)
-    const [gender, setGender] = useState(dataUser?.gender)
-    const [birthday, setBirthday] = useState(dataUser?.birthday)
-    const [address, setAddress] = useState(dataUser?.address)
+import jwt_decode from "jwt-decode";
+import authSlice from '../../../components/auth';
 
-    const [email, setEmail] = useState(dataUser.email || '');
-    const [firstname, setFirstname] = useState(dataUser.firstname || '');
-    const [lastname, setLastname] = useState(dataUser.lastname || '');
-    const [phone, setPhone] = useState(dataUser.phone || '');
+import { Box, Button, Flex, Heading, Image, Input, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
+export default function User() {
+    const dispatch = useDispatch();
+    const dataUser = useSelector(tokenRemainingSelector).user;
+
     console.log(dataUser)
+
+    const [click, setClick] = useState(true)
+    const [gender, setGender] = useState(dataUser?.gender || "other")
+    const [birthday, setBirthday] = useState(dataUser?.birthday || "")
+    const [address, setAddress] = useState(dataUser?.address || "")
+
+    const [firstname, setFirstname] = useState(dataUser?.firstname || '');
+    const [lastname, setLastname] = useState(dataUser?.lastname || '');
+    const [phone, setPhone] = useState(dataUser?.phone || '');
     const handleClickSubmitForm = (e) => {
         e.preventDefault();
         setClick(!click)
         if (click === false) {
-            const data = { id: dataUser.id, email, phone, lastname, firstname, gender, birthday, address }
+            const data = { id: dataUser.id, phone, lastname, firstname, gender, birthday, address }
             usersApi.updateUser(data)
                 .then((response) => {
-                    localStorage.setItem("refreshToken", response.data.refreshToken)
-                    toast.success(response.data.message)
+                    toast.success(response?.data.message)
                     setClick(!click)
+                    const token = response.data.token
+                    console.log(response.data)
+                    localStorage.setItem("token", JSON.stringify(token));
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
                 })
-                .catch((error) => { toast.error(error.response.data.message) })
+                .catch((error) => { toast.error(error.response?.data.message) })
         }
+    }
+
+    const handleImageChange = (e) => {
+
     }
     return (
         <>
@@ -47,53 +59,58 @@ export default function User() {
                 </Box>
 
                 {(true) ?
-                    <Box>
+                    <Box >
                         <form onSubmit={handleClickSubmitForm}>
                             <Flex m="8px">
                                 <Box className="col" textAlign="end" p="0" m="0">
                                     <Box m="8px 0 16px">Email</Box>
                                 </Box>
-                                <Box className="col-9" ml="24px">
-                                    <Input
-                                        placeholder="Email"
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        size="md"
-                                        maxW="400px"
-                                        w="60%"
-                                    />
+                                <Box className="col-9" ml={"24px"}>
+                                    <Box fontWeight="bold" m={"8px 0 16px"}>{dataUser?.email || ''}</Box>
                                 </Box>
                             </Flex>
                             <Flex m="8px">
                                 <Box className="col" textAlign="end" p="0" m="0">
                                     <Box m="8px 0 16px">Firstname</Box>
                                 </Box>
-                                <Box className="col-9" ml="24px">
-                                    <Input
-                                        placeholder="Firstname"
-                                        value={firstname}
-                                        onChange={(e) => setFirstname(e.target.value)}
-                                        size="md"
-                                        maxW="400px"
-                                        w="60%"
-                                    />
-                                </Box>
+                                <Flex className="col-9">
+                                    <Box ml="24px">
+                                        <Input
+                                            placeholder="Firstname"
+                                            value={firstname}
+                                            onChange={(e) => setFirstname(e.target.value)}
+                                            size="md"
+                                            maxW="160px"
+                                        />
+                                    </Box>
+                                    <Box textAlign="end" p="0" m="0" ml={30}>
+                                        <Box m="8px 0 16px">Lastname</Box>
+                                    </Box>
+                                    <Box ml="24px">
+                                        <Input
+                                            placeholder="Lastname"
+                                            value={lastname}
+                                            onChange={(e) => setLastname(e.target.value)}
+                                            size="md"
+                                            maxW="160px"
+                                        />
+                                        <Box mr="20px" mt="20px" h="450px" maxW="400px" position="absolute">
+                                            <Image src="http://localhost:8080/uploads/items/a.png" />
+                                            <Input
+                                                id="img"
+                                                type="file"
+                                                accept="image/*"
+                                                backgroundColor='#fff'
+                                                mt="10px"
+                                                onChange={handleImageChange}
+                                                border={"none"}
+                                            />
+                                        </Box>
+                                    </Box>
+                                </Flex>
                             </Flex>
                             <Flex m="8px">
-                                <Box className="col" textAlign="end" p="0" m="0">
-                                    <Box m="8px 0 16px">Lastname</Box>
-                                </Box>
-                                <Box className="col-9" ml="24px">
-                                    <Input
-                                        placeholder="Lastname"
-                                        value={lastname}
-                                        onChange={(e) => setLastname(e.target.value)}
-                                        size="md"
-                                        maxW="400px"
-                                        w="60%"
-                                    />
-                                </Box>
+
                             </Flex>
                             <Flex m="8px">
                                 <Box className="col" textAlign="end" p="0" m="0">
@@ -115,7 +132,7 @@ export default function User() {
                                 </Box>
                                 <Box className="col-9" ml="24px">
                                     <Input
-                                        placeholder="Ngày sinh"
+                                        placeholder="Birthday"
                                         type="date"
                                         value={birthday}
                                         onChange={(e) => setBirthday(e.target.value)}
@@ -135,8 +152,7 @@ export default function User() {
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
                                         size="md"
-                                        maxW="400px"
-                                        w="60%"
+                                        maxW="200px"
                                     />
                                 </Box>
                             </Flex>
@@ -150,17 +166,16 @@ export default function User() {
                                         value={address}
                                         onChange={(e) => setAddress(e.target.value)}
                                         size="md"
-                                        maxW="400px"
-                                        w="60%"
+                                        maxW="200px"
                                     />
                                 </Box>
                             </Flex>
                             <Flex pb={10} mt="24px">
                                 <Box className="col"></Box>
                                 <Box className="col-9" ml="24px">
-                                    <Button colorScheme="teal" type="submit" maxW="140px">
-                                        Submit
-                                    </Button>
+                                    <Box className="col-9">
+                                        <Button colorScheme={click ? "green" : "teal"} type={"submit"} className="col-9" maxW={"140px"}>{click ? "Update" : "Save"}</Button>
+                                    </Box>
                                 </Box>
                             </Flex>
                         </form>
